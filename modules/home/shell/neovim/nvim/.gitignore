@@ -6,3 +6,14 @@ debug
 foo.*
 *.log
 data
+
+# editor swap / backup files
+*.swp
+*.swo
+*.swn
+.*.sw?
+*.un~
+
+# OS junk
+.DS_Store
+Thumbs.db

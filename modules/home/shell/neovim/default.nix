@@ -11,6 +11,15 @@ in
       then config.lib.file.mkOutOfStoreSymlink "${configPath}/modules/home/shell/neovim/nvim"
       else ./nvim;
   };
+  # clangd 在没有 compile_commands.json 时默认调用 `clang`；用用户级配置指定
+  # wrapper PATH 里的 g++，否则 libstdc++ / bits/stdc++.h 无法解析。
+  xdg.configFile."clangd/config.yaml" = lib.mkIf full {
+    force = true;
+    text = ''
+      CompileFlags:
+        Compiler: g++
+    '';
+  };
   programs.neovim = {
     enable = true;
     # Keep the live ./nvim directory; load Home Manager's init code via the wrapper.
@@ -29,8 +38,9 @@ in
     withPython3 = false;
     withRuby = false;
     # Only on Neovim's PATH: nvim-treesitter (main) builds parsers with the
-    # tree-sitter CLI and a C compiler, Mason installs npm-based servers, and
-    # CompetiTest compiles C++. Make sure clangd is not installed by Mason.
+    # tree-sitter CLI and a C compiler; Mason installs npm-based servers; the
+    # <F5> keymap compiles C++ with g++; clangd/clang-format come from
+    # clang-tools. Make sure clangd is not installed by Mason.
     extraPackages = lib.optionals full [
       pkgs.tree-sitter
       pkgs.gcc
