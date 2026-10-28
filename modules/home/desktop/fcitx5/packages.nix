@@ -24,9 +24,11 @@ let
   rime-user-dictionary-repo = "git@github.com:lihaoze123/xhup-dicts.git";
   rime-crane-config-id = builtins.hashString "sha256" ''
     ${rime-crane-rev}
+    ${pkgs.rime-data}
     ${xhup-computer-dictionary}
     ${xhup-reverse-dictionary}
     ${builtins.readFile ./config/default.custom.yaml}
+    ${builtins.readFile ./config/luna_pinyin.custom.yaml}
     ${builtins.readFile ./config/xhup.custom.yaml}
     ${builtins.readFile ./patches/rime-crane-shortcuts.patch}
   '';
@@ -125,7 +127,10 @@ let
   };
 
   fcitx5-rime-crane = pkgs.fcitx5-rime.override {
-    rimeDataPkgs = [ rime-crane ];
+    # rime-crane must stay first: the merged data directory keeps files that
+    # already exist, so its default.yaml and presets win. nixpkgs rime-data
+    # adds the luna_pinyin schema (朙月拼音) and its stroke dependency.
+    rimeDataPkgs = [ rime-crane pkgs.rime-data ];
   };
 in
 {

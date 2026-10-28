@@ -64,7 +64,8 @@
       nixosConfigurations.laptop = mkHost "laptop";
       nixosConfigurations.class = mkHost "class";
       nixosConfigurations.home = mkHost "home";
-      nixosConfigurations.nixos = self.nixosConfigurations.laptop;
+      nixosConfigurations.ryoko = mkHost "ryoko";
+      nixosConfigurations.nixos = self.nixosConfigurations.ryoko;
       # Minimal system for new machines; optional features stay off.
       nixosConfigurations.base = mkHost "base";
       nixosConfigurations.vps = mkHost {

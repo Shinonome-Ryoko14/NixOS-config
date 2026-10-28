@@ -50,10 +50,17 @@ in
       };
       extra.enable = mkEnableOption "commonly used command-line tools beyond the minimal system";
     };
-    shell.profile = mkOption {
-      type = types.enum [ "full" "minimal" ];
-      default = "full";
-      description = "Fish profile; minimal keeps Starship and zoxide but omits Atuin and nix-index/comma.";
+    shell = {
+      type = mkOption {
+        type = types.enum [ "fish" "zsh" ];
+        default = "fish";
+        description = "Login shell managed by Home Manager.";
+      };
+      profile = mkOption {
+        type = types.enum [ "full" "minimal" ];
+        default = "full";
+        description = "Fish profile; minimal keeps Starship and zoxide but omits Atuin and nix-index/comma.";
+      };
     };
     editor.neovim.profile = mkOption {
       type = types.enum [ "full" "minimal" ];

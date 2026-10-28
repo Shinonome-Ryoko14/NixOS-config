@@ -10,6 +10,7 @@ lib.mkIf osConfig.my.desktop.enable {
 
   home.file = {
     ".local/share/fcitx5/rime/default.custom.yaml".source = ./config/default.custom.yaml;
+    ".local/share/fcitx5/rime/luna_pinyin.custom.yaml".source = ./config/luna_pinyin.custom.yaml;
     ".local/share/fcitx5/rime/xhup.custom.yaml".source = ./config/xhup.custom.yaml;
 
     # Files in the Nix store have a fixed mtime, so Rime cannot notice that

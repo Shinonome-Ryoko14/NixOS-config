@@ -1,0 +1,7 @@
+patch:
+  # 朙月拼音自带 simplification 开关（漢字/汉字）。rime-crane 默认把
+  # Ctrl+Shift+4 绑定到 traditionalization，而该方案没有这个开关，因此
+  # 这里改用同一个快捷键切换 simplification。
+  key_binder/bindings/+:
+    - {accept: "Control+Shift+4", toggle: simplification, when: always}
+    - {accept: "Control+Shift+dollar", toggle: simplification, when: always}
