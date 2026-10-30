@@ -21,6 +21,7 @@
     programs.appimage.enable = true;
     programs.steam.enable = true;
     desktop.wallpaperEngine.enable = true;
+    desktop.noctalia.enable = true;
   };
 
   boot.loader = {

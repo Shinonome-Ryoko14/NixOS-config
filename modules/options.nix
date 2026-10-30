@@ -130,6 +130,7 @@ in
         description = "niri KDL generated from my.desktop.outputs.";
       };
       wallpaperEngine.enable = mkEnableOption "Wallpaper Engine animated wallpapers with the DMS plugin";
+      noctalia.enable = mkEnableOption "Noctalia Shell bar replacing the DMS DankBar";
       codexComputerUse.enable = mkEnableOption "Codex Desktop Computer Use integration";
       easyeffects.enable = mkEnableOption "EasyEffects microphone denoising";
       phone.enable = mkEnableOption "Valent / KDE Connect phone integration";
@@ -224,6 +225,7 @@ in
     (requires cfg.desktop.utilities.enable cfg.desktop.enable "desktop.utilities" "desktop")
     (requires cfg.desktop.graphicalBoot.enable cfg.desktop.enable "desktop.graphicalBoot" "desktop")
     (requires cfg.desktop.wallpaperEngine.enable cfg.desktop.enable "desktop.wallpaperEngine" "desktop")
+    (requires cfg.desktop.noctalia.enable cfg.desktop.enable "desktop.noctalia" "desktop")
     (requires cfg.desktop.codexComputerUse.enable cfg.desktop.enable "desktop.codexComputerUse" "desktop")
     (requires cfg.desktop.easyeffects.enable cfg.desktop.enable "desktop.easyeffects" "desktop")
     (requires cfg.desktop.phone.enable cfg.desktop.enable "desktop.phone" "desktop")

@@ -37,7 +37,7 @@ let
   '';
   initialize = pkgs.writeShellApplication {
     name = "dms-initialize";
-    runtimeInputs = [ pkgs.coreutils ];
+    runtimeInputs = [ pkgs.coreutils ] ++ lib.optional osConfig.my.desktop.noctalia.enable pkgs.jq;
     text = ''
       settings_dir=${lib.escapeShellArg "${config.xdg.configHome}/DankMaterialShell"}
       state_dir=${lib.escapeShellArg "${config.xdg.stateHome}/DankMaterialShell"}
@@ -46,6 +46,16 @@ let
       if [ ! -e "$settings_dir/settings.json" ]; then
         install -m 600 ${initialSettings} "$settings_dir/settings.json"
       fi
+      ${lib.optionalString osConfig.my.desktop.noctalia.enable ''
+      # Noctalia owns the bar while it is enabled; keep DMS's built-in bar off
+      # so a settings reset cannot leave two bars on screen.
+      if [ -e "$settings_dir/settings.json" ]; then
+        patched="$settings_dir/settings.json.patched"
+        jq '(.barConfigs[]?.enabled) = false' "$settings_dir/settings.json" >"$patched"
+        install -m 600 "$patched" "$settings_dir/settings.json"
+        rm -f "$patched"
+      fi
+      ''}
       if [ ! -e "$state_dir/session.json" ]; then
         install -m 600 ${initialSession} "$state_dir/session.json"
       fi

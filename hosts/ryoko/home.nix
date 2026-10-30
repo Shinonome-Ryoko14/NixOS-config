@@ -19,6 +19,9 @@
 
   xresources.properties."Xft.dpi" = lib.mkForce 96;
 
+  # Use this account's own avatar instead of the shared .face.icon.
+  home.file.".face.icon".source = lib.mkForce ./avatar.jpg;
+
   # Keep this host's Fcitx5 input method list: a US keyboard layout with Rime
   # as the default engine, instead of the shared module's group.
   xdg.configFile."fcitx5/profile" = lib.mkForce {

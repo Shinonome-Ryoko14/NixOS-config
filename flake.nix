@@ -32,6 +32,10 @@
       url = "github:AvengeMedia/DankMaterialShell/v1.6.2";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Noctalia v5 bar. The cachix branch always points at a commit already
+    # present in noctalia.cachix.org; do not add nixpkgs.follows or the cache
+    # hashes change and the shell has to be compiled locally.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
     daeuniverse.url = "github:daeuniverse/flake.nix";
     geodb = {
       url = "github:Loyalsoldier/v2ray-rules-dat/release";

@@ -6,6 +6,12 @@ let
     key = "nur:dJh05Op2+iv3GCHoaF2+1FfQtqcUZzf/4v/ZTaLHomY=";
   };
   baseCaches = [ "https://mirrors.cernet.edu.cn/nix-channels/store" "https://cache.nixos.org/" ];
+  noctaliaCache = {
+    url = "https://noctalia.cachix.org";
+    key = "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4=";
+  };
+  desktopCaches = lib.optional config.my.desktop.enable noctaliaCache.url;
+  desktopKeys = lib.optional config.my.desktop.enable noctaliaCache.key;
   private = config.my.nix.cacheProfile == "private";
 in
 {
@@ -20,9 +26,12 @@ in
 
   nix.settings = {
     # Only import our private cache; project caches (including lantian) stay disabled.
-    substituters = lib.mkForce (if private then baseCaches ++ [ privateCache.url ] else [ "https://cache.nixos.org" ]);
+    substituters = lib.mkForce (
+      (if private then baseCaches ++ [ privateCache.url ] else [ "https://cache.nixos.org" ])
+      ++ desktopCaches
+    );
     extra-substituters = lib.mkForce [ ];
-    extra-trusted-public-keys = lib.optionals private [ privateCache.key ];
+    extra-trusted-public-keys = lib.mkForce (lib.optionals private [ privateCache.key ] ++ desktopKeys);
     netrc-file = lib.mkIf private config.age.secrets.attic-netrc.path;
   };
 }

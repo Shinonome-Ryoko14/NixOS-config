@@ -185,7 +185,7 @@ layout {
     // You can enable drop shadows for windows.
     shadow {
         // Uncomment the next line to enable shadows.
-        // on
+        on
 
         // By default, the shadow draws only around its window, and not behind it.
         // Uncomment this setting to make the shadow draw behind its window.
@@ -272,6 +272,20 @@ animations {
 
     // Slow down all animations by this factor. Values below 1 speed them up instead.
     // slowdown 3.0
+
+    window-open {
+        duration-ms 200
+        curve "ease-out-expo"
+    }
+
+    window-close {
+        duration-ms 160
+        curve "ease-out-quad"
+    }
+
+    workspace-switch {
+        spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
+    }
 }
 
 // Window rules let you adjust behavior for individual windows.
@@ -295,6 +309,32 @@ window-rule {
     // - Flatpak Firefox (app-id is "org.mozilla.firefox")
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
+}
+
+// Frosted-glass terminal: kitty draws a semi-transparent background, niri blurs it.
+// Configuring blur here (rather than kitty's background_blur) makes it follow the
+// geometry-corner-radius window rule from DMS.
+window-rule {
+    match app-id=r#"^kitty$"#
+    background-effect {
+        blur true
+    }
+}
+
+// Noctalia publishes its bar/panel blur regions. Disable xray so the blur
+// samples the windows behind the bar instead of the wallpaper.
+layer-rule {
+    match namespace="^noctalia-"
+    background-effect {
+        xray false
+    }
+}
+
+// Floating windows (scratchpad, dialogs) need their own radius; DMS only rounds tiled windows.
+window-rule {
+    match is-floating=true
+    geometry-corner-radius 16
+    clip-to-geometry true
 }
 
 // Example: block out two password managers from screen capture.
@@ -519,6 +559,9 @@ binds {
     Mod+Ctrl+R { reset-window-height; }
     Mod+F { maximize-column; }
     Mod+Shift+F { fullscreen-window; }
+    // Transparent "fullscreen": windowed fullscreen + maximize-to-edges + hide the bar.
+    // Real fullscreen has a black niri backdrop, so transparent terminals go opaque.
+    Mod+M repeat=false hotkey-overlay-title="透明全屏" { spawn-sh "niri-fake-fullscreen"; }
 
     // Expand the focused column to space not taken up by other fully visible columns.
     // Makes the column "fill the rest of the space".
@@ -618,6 +661,12 @@ environment {
 	QT_IM_MODULE "fcitx"
 	XMODIFIERS "@im=fcitx"
 	SDL_IM_MODULE "fcitx"
+}
+
+// Let Noctalia's launcher activate windows that do not provide a valid
+// startup serial (recommended by Noctalia's niri setup guide).
+debug {
+    honor-xdg-activation-with-invalid-serial
 }
 
 // Agent window highlight; present only on hosts with Codex computer use.

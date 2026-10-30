@@ -1,6 +1,6 @@
 { lib, pkgs, osConfig, ... }:
 {
-  imports = [ ./dms ./scratchpad.nix ];
+  imports = [ ./dms ./scratchpad.nix ./wlogout.nix ./fake-fullscreen.nix ./noctalia.nix ];
 
   config = lib.mkIf osConfig.my.desktop.enable {
     home.file.".background/wallpaper.jpg".source = ./wallpaper.jpg;
