@@ -6,8 +6,8 @@
 硬件配置已在 2026-10-08 安装时由目标机自动生成，不包含文件系统声明。
 本地 build 通过不等于硬件启动已验证。
 
-本次已完成安装并启动验证：主机名 class，root/chumeng 的 laptop 公钥已配置；
-root/chumeng SSH 可用，Btrfs 与 ESP 挂载正常，8 GiB swap 已启用，systemd 无失败单元。
+本次已完成安装并启动验证：主机名 class，root/ryoko 的 laptop 公钥已配置；
+root/ryoko SSH 可用，Btrfs 与 ESP 挂载正常，8 GiB swap 已启用，systemd 无失败单元。
 首次启动后已重新生成 GRUB 菜单并检测到 Windows Boot Manager。
 Wi-Fi 地址仍为 `10.121.60.116`，有线地址为 `10.115.8.199`。
 
@@ -80,8 +80,8 @@ jj status
 
 ## 首次登录与更新
 
-root 和 chumeng 均允许 laptop 公钥登录 SSH。没有配置登录密码，首次登录 root 后用
-`passwd chumeng` 设置本地登录和 sudo 密码。设置前通过 root 做管理操作。
+root 和 ryoko 均允许 laptop 公钥登录 SSH。没有配置登录密码，首次登录 root 后用
+`passwd ryoko` 设置本地登录和 sudo 密码。设置前通过 root 做管理操作。
 本次安装已将安装环境正在使用的 HHU-WiFi 连接配置复制到新系统，权限为 0600，
 该文件只保存在目标机，不进入配置仓库。此 flake 本身不声明 Wi-Fi 连接；以后重装需
 重新迁移连接配置，或在目标机 root 控制台用 `nmtui` 配置 Wi-Fi。也可使用已插入的有线网络。
@@ -89,7 +89,7 @@ root 和 chumeng 均允许 laptop 公钥登录 SSH。没有配置登录密码，
 
 ```bash
 ssh root@<启动后的IP>
-passwd chumeng
+passwd ryoko
 ```
 
 若 GRUB 尚未显示 Windows，首次进 NixOS 后以 root 运行
@@ -106,9 +106,9 @@ nixos-rebuild switch --flake .#class --target-host root@<IP>
 
 ## 加密凭据
 
-`secrets/keys.nix` 已登记 `class`（SSH 主机公钥）和 `class-user`（chumeng 的 SSH 公钥）。
+`secrets/keys.nix` 已登记 `class`（SSH 主机公钥）和 `class-user`（ryoko 的 SSH 公钥）。
 系统 agenix 使用 `/etc/ssh/ssh_host_ed25519_key`；Home Manager 使用
-`/home/chumeng/.ssh/id_ed25519`，均覆盖 base 的旧 id_rsa 路径。
+`/home/ryoko/.ssh/id_ed25519`，均覆盖 base 的旧 id_rsa 路径。
 两把私钥只保存在目标机；重装前须单独备份，或在重装后生成新密钥并重新加密。
 
 系统 secrets 的收件人包含 class；用户 AI CLI secrets 的收件人包含 class-user；
@@ -160,7 +160,7 @@ sudo nixos-rebuild boot --flake .#class
 Niri 与 Neovim 的配置直接随系统部署，不依赖目标机上的 `~/nixos-config` checkout。
 class 与 laptop 共用 Codex Desktop 和 computer use 集成，使用带 agent input 补丁的 Niri，
 部署 `computer-use.kdl` 中的 is-agent-driven 窗口规则；关闭 `my.desktop.codexComputerUse` 时恢复标准 Niri 并禁用该规则。
-用户 chumeng 加入 ydotool 组，系统部署 uinput 权限、ydotool 服务和 AT-SPI 支持。
+用户 ryoko 加入 ydotool 组，系统部署 uinput 权限、ydotool 服务和 AT-SPI 支持。
 命令行入口为 `codex-desktop` 和 `codex-computer-use`（MCP 模式使用 `codex-computer-use mcp`）。
 首次启用须按下方步骤写入下一次启动并重启，让新 Niri 和组权限生效。
 DMS 布局文件采用可选 include，以支持首次启动。

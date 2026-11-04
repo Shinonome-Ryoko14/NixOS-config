@@ -49,5 +49,5 @@
 - Structural checks: zero malformed entries, zero duplicate terms, zero overlap with the pinned Xiaohe tables, and all codes are four lowercase ASCII letters.
 - Pronunciation cross-check: 4,721 annotated Rime Ice matches with zero final code mismatches.
 - Package build: the customized `fcitx5-rime` package built successfully.
-- Full build: `nixos-rebuild build --flake path:/home/chumeng/nixos-config#home` succeeded.
+- Full build: `nixos-rebuild build --flake path:/home/ryoko/nixos-config#home` succeeded.
 - Runtime-style deployment: `rime_deployer --build` compiled `xhup.table.bin`, reverse table, schema, and prism successfully with all four manual user dictionaries present.

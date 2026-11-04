@@ -149,7 +149,7 @@ Plugins → Linux Wallpaper Engine 中选择壁纸。默认 Steam 路径会自�
 Dankscale 和番茄钟仅首次自动加入第一条启用的状态栏，之后可自由移动或移除。
 首次添加状态栏组件时，会重启正在运行的 DMS 用户服务以刷新布局。
 Tailscale 用户管理权限由 laptop 的 `services.tailscale.extraSetFlags`
-配置为 `--operator=chumeng`。应用系统配置之前，也可通过 Dankscale 的
+配置为 `--operator=ryoko`。应用系统配置之前，也可通过 Dankscale 的
 授权按钮完成本机认证。不要把插件配置文件链接到只读 Nix store。
 
 Phone Connect 使用现有 GVfs 和 GCR SSH agent，在 Nautilus 中浏览手机文件。

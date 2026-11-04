@@ -1,7 +1,7 @@
 { config, lib, pkgs, ... }:
 let
   cfg = config.services.memos;
-  domain = "memos.chumeng.xyz";
+  domain = "memos.example.com";
   settingsDir = pkgs.linkFarm "memos-settings" (map
     (setting: {
       name = "memos-instance-setting-${setting.name}.json";

@@ -1,8 +1,8 @@
 # 私有 Attic 缓存
 
 私有二进制缓存部署在甲骨文 VPS，由 [hosts/vps/attic.nix](../hosts/vps/attic.nix)
-通过 NixOS 原生 `services.atticd` 管理。API 为 `https://cache.chumeng.xyz/`，
-缓存地址为 `https://cache.chumeng.xyz/nur`。Cloudflare 仅提供 DNS，HTTPS 由 VPS 的
+通过 NixOS 原生 `services.atticd` 管理。API 为 `https://cache.example.com/`，
+缓存地址为 `https://cache.example.com/nur`。Cloudflare 仅提供 DNS，HTTPS 由 VPS 的
 Nginx 与 ACME 管理，上传和响应均不缓冲到 Nginx 临时文件。
 
 缓存保持私有；上传权限与下载权限分开。签名私钥由 Attic 保存在服务端数据库中，
@@ -179,9 +179,9 @@ NUR 的补丁版配方，不再引入单独的上游 Flake 或维护本地覆盖
 只读维护：
 
 ```bash
-ssh chumeng@<VPS_IP> 'systemctl status atticd nginx --no-pager'
-ssh chumeng@<VPS_IP> 'sudo journalctl -u atticd -n 100 --no-pager'
-ssh chumeng@<VPS_IP> 'sudo du -shL /var/lib/atticd; df -h /'
+ssh ryoko@<VPS_IP> 'systemctl status atticd nginx --no-pager'
+ssh ryoko@<VPS_IP> 'sudo journalctl -u atticd -n 100 --no-pager'
+ssh ryoko@<VPS_IP> 'sudo du -shL /var/lib/atticd; df -h /'
 ```
 
 管理 token 可在 VPS 上通过 `sudo atticd-atticadm make-token` 按需生成，限定缓存与有效期；

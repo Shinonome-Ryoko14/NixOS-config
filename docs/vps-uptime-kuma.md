@@ -1,10 +1,10 @@
 # Uptime Kuma 服务监控
 
-访问 **https://uptime.chumeng.xyz**。配置位于 [hosts/vps/uptime-kuma.nix](../hosts/vps/uptime-kuma.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。使用 Uptime Kuma 2.5.7 的 ARM64 镜像并固定摘要。
+访问 **https://uptime.example.com**。配置位于 [hosts/vps/uptime-kuma.nix](../hosts/vps/uptime-kuma.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。使用 Uptime Kuma 2.5.7 的 ARM64 镜像并固定摘要。
 
 ## 登录与监控
 
-管理员用户名为 `chumeng`，首次账号已初始化。在自己的终端查看随机初始密码：
+管理员用户名为 `ryoko`，首次账号已初始化。在自己的终端查看随机初始密码：
 
 ```bash
 ssh vps 'sudo cat /run/agenix/uptime-kuma-admin-password'
@@ -27,7 +27,7 @@ ssh vps 'sudo cat /run/agenix/uptime-kuma-admin-password'
 ```bash
 ssh vps 'systemctl status docker-uptime-kuma --no-pager'
 ssh vps 'sudo journalctl -u docker-uptime-kuma -n 100 --no-pager'
-curl --fail https://uptime.chumeng.xyz/
+curl --fail https://uptime.example.com/
 ```
 
 容器日志限制为 10 MiB × 3。升级时先备份，再显式更新镜像版本与摘要，按 [VPS 更新流程](vps-installation.md#后续更新) 先构建预览、后部署。不要删除数据库来重复初始化账号。

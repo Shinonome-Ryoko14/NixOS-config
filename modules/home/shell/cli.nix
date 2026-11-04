@@ -2,8 +2,8 @@
 let
   # Commit identity shared by Git and Jujutsu.
   identity = {
-    name = "chumeng";
-    email = "2595248810@qq.com";
+    name = "ryoko";
+    email = "w13949636385@gmail.com";
   };
 in
 {

@@ -107,7 +107,7 @@ nix profile remove obsidian
 仓库提供项目模板，包含 Rust、C++、Node、Python、Java 五种独立 shell。进入新建或没有 flake 的项目目录：
 
 ```bash
-nix flake init -t /home/chumeng/nixos-config#project
+nix flake init -t /home/ryoko/nixos-config#project
 # 在项目里生成并保留自己的 flake.lock
 nix develop .#rust
 # 或 .#cpp / .#node / .#python / .#java
@@ -120,7 +120,7 @@ Java 8 + 内嵌 Tomcat 9 + javax Servlet/JSP 的最小项目使用独立模板�
 ```bash
 mkdir my-webapp
 cd my-webapp
-nix flake init -t /home/chumeng/nixos-config#java-webapp
+nix flake init -t /home/ryoko/nixos-config#java-webapp
 nix develop
 mvn clean package
 java -jar target/my-jsp-project.jar

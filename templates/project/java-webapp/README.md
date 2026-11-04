@@ -7,7 +7,7 @@ Temurin JDK 8 + Embedded Tomcat 9.0.123 + javax Servlet 4.0 / JSP 2.3，打包�
 在新目录中初始化 Nix 模板：
 
 ```sh
-nix flake init -t /home/chumeng/nixos-config#java-webapp
+nix flake init -t /home/ryoko/nixos-config#java-webapp
 nix develop
 mvn clean package
 java -jar target/my-jsp-project.jar

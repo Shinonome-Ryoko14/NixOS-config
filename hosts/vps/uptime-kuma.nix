@@ -25,7 +25,7 @@
     ];
   };
 
-  services.nginx.virtualHosts."uptime.chumeng.xyz" = {
+  services.nginx.virtualHosts."uptime.example.com" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {

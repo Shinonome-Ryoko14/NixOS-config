@@ -219,7 +219,7 @@ vocotype-doubao-worker --transcribe /tmp/doubao-test.wav
 agenix 已解密凭据后，也可从仓库构建并运行同一后端：
 
 ```bash
-nix run --impure --expr 'let f = builtins.getFlake (toString ./.); in builtins.head (builtins.filter (p: p.name == "vocotype-doubao-worker") f.nixosConfigurations.laptop.config.home-manager.users.chumeng.home.packages)' \
+nix run --impure --expr 'let f = builtins.getFlake (toString ./.); in builtins.head (builtins.filter (p: p.name == "vocotype-doubao-worker") f.nixosConfigurations.laptop.config.home-manager.users.ryoko.home.packages)' \
   -- --transcribe /tmp/doubao-test.wav
 ```
 

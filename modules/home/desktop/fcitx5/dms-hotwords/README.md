@@ -41,7 +41,7 @@ dms ipc call vocotypeHotwords status
 
 ```bash
 parser_store=$(nix build --impure --no-link --print-out-paths --expr \
-  '(builtins.getFlake (toString ./.)).nixosConfigurations.laptop.config.home-manager.users.chumeng.xdg.configFile."DankMaterialShell/plugins/vocotypeHotwords".source.parser')
+  '(builtins.getFlake (toString ./.)).nixosConfigurations.laptop.config.home-manager.users.ryoko.xdg.configFile."DankMaterialShell/plugins/vocotypeHotwords".source.parser')
 VOCOTYPE_TEST_PARSER="$parser_store/bin/vocotype-terms-parser" \
   python3 modules/home/desktop/fcitx5/tests/test-vocotype-hotwords.py
 ```

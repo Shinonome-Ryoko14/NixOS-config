@@ -2,7 +2,7 @@
 let
   # Keep cache trust local; NUR repositories do not configure substituters.
   privateCache = {
-    url = "https://cache.chumeng.xyz/nur";
+    url = "https://cache.example.com/nur";
     key = "nur:dJh05Op2+iv3GCHoaF2+1FfQtqcUZzf/4v/ZTaLHomY=";
   };
   baseCaches = [ "https://mirrors.cernet.edu.cn/nix-channels/store" "https://cache.nixos.org/" ];

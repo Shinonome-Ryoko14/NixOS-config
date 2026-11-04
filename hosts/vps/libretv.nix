@@ -22,7 +22,7 @@
     ];
   };
 
-  services.nginx.virtualHosts."tv.chumeng.xyz" = {
+  services.nginx.virtualHosts."tv.example.com" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {

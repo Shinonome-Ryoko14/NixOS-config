@@ -10,8 +10,8 @@
     environmentFile = config.age.secrets.attic-server-env.path;
     settings = {
       listen = "127.0.0.1:8085";
-      allowed-hosts = [ "cache.chumeng.xyz" ];
-      api-endpoint = "https://cache.chumeng.xyz/";
+      allowed-hosts = [ "cache.example.com" ];
+      api-endpoint = "https://cache.example.com/";
       database.url = "sqlite:///var/lib/atticd/server.db?mode=rwc";
       storage = {
         type = "local";
@@ -43,7 +43,7 @@
 
   environment.systemPackages = [ pkgs.attic-client ];
 
-  services.nginx.virtualHosts."cache.chumeng.xyz" = {
+  services.nginx.virtualHosts."cache.example.com" = {
     enableACME = true;
     forceSSL = true;
     extraConfig = ''

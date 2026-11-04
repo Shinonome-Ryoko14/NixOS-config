@@ -1,6 +1,6 @@
 # VPS wastebin
 
-访问 **https://paste.chumeng.xyz**。配置位于 [hosts/vps/wastebin.nix](../hosts/vps/wastebin.nix)，通过 NixOS 原生 `services.wastebin` 运行，版本随仓库锁定的 Nixpkgs（当前 3.8.0）。
+访问 **https://paste.example.com**。配置位于 [hosts/vps/wastebin.nix](../hosts/vps/wastebin.nix)，通过 NixOS 原生 `services.wastebin` 运行，版本随仓库锁定的 Nixpkgs（当前 3.8.0）。
 
 ## 服务与网络
 
@@ -25,8 +25,8 @@ Cookie 签名密钥与密码盐由安全随机数生成，遵循现有 ragenix �
 ```bash
 ssh vps 'systemctl status wastebin nginx --no-pager'
 ssh vps 'sudo journalctl -u wastebin -n 100 --no-pager'
-curl --fail https://paste.chumeng.xyz/
-ssh vps 'systemctl list-timers acme-renew-paste.chumeng.xyz.timer'
+curl --fail https://paste.example.com/
+ssh vps 'systemctl list-timers acme-renew-paste.example.com.timer'
 ssh vps 'systemctl --failed'
 ```
 

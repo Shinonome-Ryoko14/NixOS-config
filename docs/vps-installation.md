@@ -17,7 +17,7 @@
 | 引导 | GRUB EFI removable 路径，不写 EFI variables；串口 `ttyAMA0,115200` |
 | 网络 | 按 MAC `02:00:17:03:51:20` 匹配，networkd DHCPv4/DHCPv6 + IPv6 RA，MTU 9000 |
 | 公网地址 | IPv4 由 OCI 映射到 DHCP 内网地址，不能将公网 IPv4 配在接口上 |
-| 登录 | `chumeng`，现有个人 RSA 与 class Ed25519 公钥，免密 sudo |
+| 登录 | `ryoko`，现有个人 RSA 与 class Ed25519 公钥，免密 sudo |
 | SSH | TCP 22；禁用密码、键盘交互认证和 root SSH 登录 |
 | Nix 缓存 | 仅 `https://cache.nixos.org`，不解密个人设备缓存 token，不复制个人私钥 |
 
@@ -35,9 +35,9 @@
 - Shell：Fish、Starship（含 JJ 状态）、zoxide；关闭 Atuin、nix-index/comma。
 - 编辑器：简洁 Neovim，无 LazyVim、插件自举、GCC、Node.js 或 clang-tools；共享系统层仍有 Vim。
 
-启用系统级 Docker 和 rootless Docker，`chumeng` 加入 `docker` 组，Docker CLI 默认连接 rootless 用户 socket。启用 linger，让用户服务在开机时启动、退出 SSH 后保持运行。业务服务包含由 NixOS 管理的 Cloudreve、AutoBangumi、qBittorrent、Emby 容器与原生 wastebin、Forgejo、Memos 服务，见 [Cloudreve 使用说明](vps-cloudreve.md)、[wastebin 使用说明](vps-wastebin.md)、[私有 Git 服务](vps-forgejo.md)、[Memos 笔记](vps-memos.md)、[私有 Attic 缓存](nix-cache.md) 和 [自动追番与 Emby](vps-media.md)。启用 Mosh，不启用桌面、AI、代理或 Tailscale。时区与 locale 沿用共享配置的 `Asia/Shanghai` 和 `zh_CN.UTF-8`。
+启用系统级 Docker 和 rootless Docker，`ryoko` 加入 `docker` 组，Docker CLI 默认连接 rootless 用户 socket。启用 linger，让用户服务在开机时启动、退出 SSH 后保持运行。业务服务包含由 NixOS 管理的 Cloudreve、AutoBangumi、qBittorrent、Emby 容器与原生 wastebin、Forgejo、Memos 服务，见 [Cloudreve 使用说明](vps-cloudreve.md)、[wastebin 使用说明](vps-wastebin.md)、[私有 Git 服务](vps-forgejo.md)、[Memos 笔记](vps-memos.md)、[私有 Attic 缓存](nix-cache.md) 和 [自动追番与 Emby](vps-media.md)。启用 Mosh，不启用桌面、AI、代理或 Tailscale。时区与 locale 沿用共享配置的 `Asia/Shanghai` 和 `zh_CN.UTF-8`。
 
-Mosh 沿用 SSH 公钥认证，由 SSH 按需启动 `mosh-server`，无需常驻服务。客户端使用 `mosh chumeng@<VPS_IP>`，或 `mosh <SSH 别名>` 连接；会话随后通过 UDP 60000–61000 通信。
+Mosh 沿用 SSH 公钥认证，由 SSH 按需启动 `mosh-server`，无需常驻服务。客户端使用 `mosh ryoko@<VPS_IP>`，或 `mosh <SSH 别名>` 连接；会话随后通过 UDP 60000–61000 通信。
 
 2026-10-25 已完成 Mosh 的远端构建、激活预览和 deploy-rs 正式部署。`mosh-server` 版本为 1.4.0，nftables 已放行 UDP 60000–61000，实际 Mosh 会话成功返回测试标记并正常退出。SSH、防火墙与 Nginx 服务正常，系统失败服务为 0，无需重启 VPS。
 
@@ -45,15 +45,15 @@ Mosh 沿用 SSH 公钥认证，由 SSH 按需启动 `mosh-server`，无需常驻
 
 网络调优由 [network-tuning.nix](../hosts/vps/network-tuning.nix) 声明，使用内核自带的 BBR 拥塞控制与 fq 队列。`vps-wan-fq.service` 等待 `enp0s6` 出现后更新发送队列，保留网卡的 mq 多队列结构；仅设置 `net.core.default_qdisc` 不会替换已存在的队列。部署后用 `sysctl net.ipv4.tcp_congestion_control net.core.default_qdisc` 和 `tc qdisc show dev enp0s6` 核对，预期分别为 `bbr`、`fq`，以及 mq 下的 fq 子队列。运行中的临时调参不代替配置部署。
 
-LibreTV 部署在 `https://tv.chumeng.xyz`，使用独立的访问密码及固定摘要的 ARM64 容器；数据源配置和使用方法见 [LibreTV](vps-libretv.md)。
+LibreTV 部署在 `https://tv.example.com`，使用独立的访问密码及固定摘要的 ARM64 容器；数据源配置和使用方法见 [LibreTV](vps-libretv.md)。
 
-Karakeep 收藏服务部署在 `https://keep.chumeng.xyz`，配有浏览器抓取和全文搜索，见 [Karakeep 使用说明](vps-karakeep.md)。Uptime Kuma 部署在 `https://uptime.chumeng.xyz`，用于检查现有站点的可用性，见 [监控说明](vps-uptime-kuma.md)。两者使用固定摘要的 ARM64 容器与原生 Nginx/ACME，应用端口仅绑定回环地址，初始账号密码通过 ragenix 加密管理。
+Karakeep 收藏服务部署在 `https://keep.example.com`，配有浏览器抓取和全文搜索，见 [Karakeep 使用说明](vps-karakeep.md)。Uptime Kuma 部署在 `https://uptime.example.com`，用于检查现有站点的可用性，见 [监控说明](vps-uptime-kuma.md)。两者使用固定摘要的 ARM64 容器与原生 Nginx/ACME，应用端口仅绑定回环地址，初始账号密码通过 ragenix 加密管理。
 
 ## 防火墙管理
 
 OCI 云侧对本 VPS 放行所有入站协议与端口，服务端口统一由 NixOS 的 `networking.firewall` 管理。2026-10-16 已在仅关联 VPS VNIC 的 `ig-quick-action-NSG` 中添加两条有状态入站规则：来源 `0.0.0.0/0` 和 `::/0`，协议均为“所有协议”。NSG 与子网安全列表的允许规则取并集，子网原有的窄范围规则不限制这两条放行规则。
 
-主机使用 nftables，入站默认丢弃；当前允许 TCP 22、80、443、51413，UDP 51413 和 Mosh 使用的 UDP 60000–61000，以及 NixOS 默认的 ICMP、DHCP 等必要流量。51413 用于 qBittorrent 的 BT 连接；AutoBangumi、Emby 和下载器的 Web 端口均只发布在回环地址。`trustedInterfaces` 仅包含 `lo`。Cloudreve 通过 `https://pan.chumeng.xyz` 公开访问，80 端口用于跳转 HTTPS 和 ACME 证书验证；应用容器仅发布至 `127.0.0.1:5212`，数据库和 Redis 不发布端口。后续公开服务须在 Nix 配置中声明监听地址和对应 `allowedTCPPorts` / `allowedUDPPorts`，构建并部署后生效，无需再逐端口修改 OCI。新建或更换 VNIC 时，需重新确认其关联了该 NSG。
+主机使用 nftables，入站默认丢弃；当前允许 TCP 22、80、443、51413，UDP 51413 和 Mosh 使用的 UDP 60000–61000，以及 NixOS 默认的 ICMP、DHCP 等必要流量。51413 用于 qBittorrent 的 BT 连接；AutoBangumi、Emby 和下载器的 Web 端口均只发布在回环地址。`trustedInterfaces` 仅包含 `lo`。Cloudreve 通过 `https://pan.example.com` 公开访问，80 端口用于跳转 HTTPS 和 ACME 证书验证；应用容器仅发布至 `127.0.0.1:5212`，数据库和 Redis 不发布端口。后续公开服务须在 Nix 配置中声明监听地址和对应 `allowedTCPPorts` / `allowedUDPPorts`，构建并部署后生效，无需再逐端口修改 OCI。新建或更换 VNIC 时，需重新确认其关联了该 NSG。
 
 ## 安装前核对（只读）
 
@@ -77,8 +77,8 @@ nix eval --json .#nixosConfigurations.vps.config.services.openssh.settings
 
 仓库公钥指纹应为：
 
-- RSA 3072：`SHA256:ZHIaijFOZNPyfM7FJ0qnROvcIdevFynATTiB0N/teaE`（`chumeng@chumeng`）。
-- Ed25519：`SHA256:J/KEcMqDmM5uT0fn4WrBowDCCkPQ07+k9halP66Dhr8`（`chumeng@class`）。
+- RSA 3072：`SHA256:ZHIaijFOZNPyfM7FJ0qnROvcIdevFynATTiB0N/teaE`（`ryoko@ryoko`）。
+- Ed25519：`SHA256:J/KEcMqDmM5uT0fn4WrBowDCCkPQ07+k9halP66Dhr8`（`ryoko@class`）。
 
 这些是登录公钥，不是个人私钥。当前 Ubuntu 上的两把授权公钥已用于本配置。
 
@@ -111,10 +111,10 @@ nix run github:nix-community/nixos-anywhere/bc36798d8fcad7ee85ac139c8473e999afbf
 
 ## 安装后验证
 
-安装完成后改用 `chumeng` 登录，原来的 `ubuntu` 账户不再存在，root SSH 已关闭：
+安装完成后改用 `ryoko` 登录，原来的 `ubuntu` 账户不再存在，root SSH 已关闭：
 
 ```bash
-ssh chumeng@<VPS_IP>
+ssh ryoko@<VPS_IP>
 sudo -n true
 hostname
 uname -m
@@ -130,7 +130,7 @@ systemctl --failed
 
 ### 本机安装验证记录（2026-10-16）
 
-已通过正常 EFI 引导启动 NixOS `26.11.20261006.151fa4e`，内核 `6.18.55`。`chumeng` 公钥登录、免密 sudo、Fish 和无插件的 Neovim 启动均正常；SSH、networkd、resolved 与 Home Manager 服务正常，失败服务为 0。
+已通过正常 EFI 引导启动 NixOS `26.11.20261006.151fa4e`，内核 `6.18.55`。`ryoko` 公钥登录、免密 sudo、Fish 和无插件的 Neovim 启动均正常；SSH、networkd、resolved 与 Home Manager 服务正常，失败服务为 0。
 
 整盘为 150 GiB：`/boot` 512 MiB，ext4 根分区约 149.5 GiB，文件系统显示约 147 GiB；zram 为 2 GiB。已确认 root SSH 登录被拒绝，密码及键盘交互认证禁用。
 
@@ -144,12 +144,12 @@ IPv4 和 IPv6 均可访问官方缓存。已在 OCI 路由表添加 `::/0 → ig
 
 首次安装完成后，使用原生 deploy-rs 更新 VPS；`nix run .#deploy` 直接调用仓库锁定版本的 CLI。每次通过 `--hostname` 手动指定实际 IP，仓库不保存部署地址。`deploy.nodes.vps.hostname` 中的 `vps` 仅为逻辑占位名。
 
-部署使用 `chumeng` 登录，再通过 sudo 以 root 激活。先确认连接和 sudo 可用：
+部署使用 `ryoko` 登录，再通过 sudo 以 root 激活。先确认连接和 sudo 可用：
 
 ```bash
-ssh 'chumeng@<VPS_IP>'
+ssh 'ryoko@<VPS_IP>'
 # 退出远端 SSH，回到本地后继续
-ssh 'chumeng@<VPS_IP>' 'sudo -n true'
+ssh 'ryoko@<VPS_IP>' 'sudo -n true'
 ```
 
 修改本地配置后，在仓库根目录运行：
@@ -172,13 +172,13 @@ nix run .#deploy -- .#vps --hostname '<VPS_IP>' --skip-checks
 
 ```bash
 nixos-rebuild build --flake .#vps \
-  --build-host chumeng@<VPS_IP> \
-  --target-host chumeng@<VPS_IP> \
+  --build-host ryoko@<VPS_IP> \
+  --target-host ryoko@<VPS_IP> \
   --sudo
 
 nixos-rebuild switch --flake .#vps \
-  --build-host chumeng@<VPS_IP> \
-  --target-host chumeng@<VPS_IP> \
+  --build-host ryoko@<VPS_IP> \
+  --target-host ryoko@<VPS_IP> \
   --sudo
 ```
 

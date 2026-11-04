@@ -16,7 +16,7 @@ node {
 使用现有 ragenix 规则编辑，不在普通仓库文件中保存真实分享链接：
 
 ```bash
-cd /home/chumeng/nixos-config/secrets
+cd /home/ryoko/nixos-config/secrets
 ragenix -e dae-nodes.age -i ~/.ssh/id_ed25519
 ```
 

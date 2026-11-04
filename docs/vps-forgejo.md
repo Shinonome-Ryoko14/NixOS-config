@@ -1,12 +1,12 @@
 # VPS 私有 Git 服务：Forgejo
 
-配置位于 [hosts/vps/forgejo.nix](../hosts/vps/forgejo.nix)，由 NixOS 原生 `services.forgejo` 管理，使用锁定 Nixpkgs 中的默认 LTS 软件包。访问地址为 **https://git.chumeng.xyz**，域名必须先解析至 VPS；HTTPS 沿用现有 Nginx 与 ACME 配置。
+配置位于 [hosts/vps/forgejo.nix](../hosts/vps/forgejo.nix)，由 NixOS 原生 `services.forgejo` 管理，使用锁定 Nixpkgs 中的默认 LTS 软件包。访问地址为 **https://git.example.com**，域名必须先解析至 VPS；HTTPS 沿用现有 Nginx 与 ACME 配置。
 
 ## 访问与账号
 
 关闭公开注册和 OpenID 登录、注册，要求登录后访问，新建仓库默认私有。该设置控制账号和仓库访问，服务地址仍可从公网连接。尚未配置邮件发送和 CI runner，Actions 暂时关闭。
 
-本次部署创建管理员 `chumeng`，随机初始密码加密保存在 `secrets/forgejo-admin-password.age`，收件人沿用 VPS、laptop 与 class-user。持有对应私钥时，在仓库根目录执行以下命令查看（会把初始密码显示到当前终端）：
+本次部署创建管理员 `ryoko`，随机初始密码加密保存在 `secrets/forgejo-admin-password.age`，收件人沿用 VPS、laptop 与 class-user。持有对应私钥时，在仓库根目录执行以下命令查看（会把初始密码显示到当前终端）：
 
 ```bash
 ragenix --rules secrets/secrets.nix -e secrets/forgejo-admin-password.age --editor cat
@@ -21,24 +21,24 @@ sudo -u forgejo forgejo \
   --work-path /var/lib/forgejo \
   --config /var/lib/forgejo/custom/conf/app.ini \
   admin user create \
-  --username chumeng \
-  --email 2595248810@qq.com \
+  --username ryoko \
+  --email w13949636385@gmail.com \
   --admin --random-password --random-password-length 32 --must-change-password
 ```
 
 命令会在当前终端显示随机初始密码，首次登录必须修改。只在账号不存在时运行，不要把密码写入命令、仓库或日志；重新部署不会重置账号。其他账号由管理员创建。参数见 [Forgejo CLI 文档](https://forgejo.org/docs/latest/admin/command-line/)。
 
-本次部署已将 [VPS 授权公钥](../hosts/vps/authorized_keys) 中的两把个人公钥添加到管理员账号；新增设备时在账号设置中添加 SSH 公钥。Git SSH 复用系统 OpenSSH 的 TCP 22，连接用户为 **`forgejo`**，不是 VPS 管理用户 `chumeng`；网页账号仍为 `chumeng`。Forgejo 根据添加到网页账号的公钥控制仓库权限，后续修改 VPS 的授权密钥不会自动同步至 Forgejo。
+本次部署已将 [VPS 授权公钥](../hosts/vps/authorized_keys) 中的两把个人公钥添加到管理员账号；新增设备时在账号设置中添加 SSH 公钥。Git SSH 复用系统 OpenSSH 的 TCP 22，连接用户为 **`forgejo`**，不是 VPS 管理用户 `ryoko`；网页账号仍为 `ryoko`。Forgejo 根据添加到网页账号的公钥控制仓库权限，后续修改 VPS 的授权密钥不会自动同步至 Forgejo。
 
 ```bash
-ssh -T forgejo@git.chumeng.xyz
+ssh -T forgejo@git.example.com
 ```
 
 先在网页创建私有仓库，再为已有 Jujutsu 仓库添加远端：
 
 ```bash
 # 将 <repo> 替换为实际仓库名；forgejo 是本地远端名称。
-jj git remote add forgejo 'ssh://forgejo@git.chumeng.xyz/chumeng/<repo>.git'
+jj git remote add forgejo 'ssh://forgejo@git.example.com/ryoko/<repo>.git'
 jj git push --remote forgejo --bookmark main
 ```
 
@@ -59,7 +59,7 @@ systemctl status forgejo nginx --no-pager
 sudo journalctl -u forgejo -n 100 --no-pager
 systemctl list-timers forgejo-dump.timer
 systemctl --failed
-curl --fail https://git.chumeng.xyz/user/login
+curl --fail https://git.example.com/user/login
 ```
 
 按 [VPS 更新流程](vps-installation.md#后续更新) 先构建、预览，再激活。部署后需核对证书、注册关闭和匿名访问限制，并用临时私有仓库验证 SSH 推送与拉取、未授权密钥拒绝访问，以及服务重启后数据保留。

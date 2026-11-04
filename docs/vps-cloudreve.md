@@ -4,12 +4,12 @@
 
 ## 访问与账号
 
-访问 **https://pan.chumeng.xyz**，管理员登录邮箱为 `2595248810@qq.com`。管理员已在开放公网入口前初始化，公开注册已关闭；需要新用户时可在管理面板操作。
+访问 **https://pan.example.com**，管理员登录邮箱为 `w13949636385@gmail.com`。管理员已在开放公网入口前初始化，公开注册已关闭；需要新用户时可在管理面板操作。
 
 初始密码使用 ragenix 加密保存在 `secrets/cloudreve-admin-password.age`。在自己的终端运行以下命令查看：
 
 ```bash
-ssh chumeng@<VPS_IP> 'sudo cat /run/agenix/cloudreve-admin-password'
+ssh ryoko@<VPS_IP> 'sudo cat /run/agenix/cloudreve-admin-password'
 ```
 
 日后在网页里修改密码。加密文件仅记录初始密码，修改文件或重新部署不会重置现有账号。站点 URL、注册开关、存储策略等应用设置存储在数据库，通过管理面板维护。
@@ -64,9 +64,9 @@ Cloudflare 的 A / AAAA 记录继续指向 VPS，保持仅 DNS 模式。无需�
 ```bash
 systemctl status docker-cloudreve docker-cloudreve-db docker-cloudreve-redis --no-pager
 journalctl -u docker-cloudreve -n 100 --no-pager
-curl --fail https://pan.chumeng.xyz/api/v4/site/ping
+curl --fail https://pan.example.com/api/v4/site/ping
 sudo docker exec cloudreve-db pg_isready -U cloudreve -d cloudreve
-systemctl list-timers acme-renew-pan.chumeng.xyz.timer
+systemctl list-timers acme-renew-pan.example.com.timer
 systemctl --failed
 ```
 
@@ -87,6 +87,6 @@ systemctl --failed
 
 归档及目录仅 root 可读，已验证压缩包和数据库转储可列出内容。按用户要求，Cloudreve 验证通过后已删除旧 `/var/lib/nextcloud`、`/var/lib/postgresql`、`/var/lib/redis-nextcloud` 数据目录，移除旧服务、定时任务和 Nextcloud 初始密码配置。旧系统代际保留，但若要恢复运行 Nextcloud，需要先恢复上述备份中的数据。Cloudreve 使用独立数据库和存储，旧账号、文件、分享链接没有自动导入 Cloudreve。
 
-切换验证：公网 IPv4、IPv6 均返回 Cloudreve 4.19.1；HTTPS 前端返回 200，证书校验通过，HTTP 返回 301 跳转 HTTPS。管理员登录、管理 API、文件上传、下载内容比对和删除均通过；关闭公开注册，站点 URL 为 `https://pan.chumeng.xyz`。旧 Nextcloud 相关单元均为 `not-found/inactive`，Cloudreve 服务重启后恢复正常，失败服务为 0。
+切换验证：公网 IPv4、IPv6 均返回 Cloudreve 4.19.1；HTTPS 前端返回 200，证书校验通过，HTTP 返回 301 跳转 HTTPS。管理员登录、管理 API、文件上传、下载内容比对和删除均通过；关闭公开注册，站点 URL 为 `https://pan.example.com`。旧 Nextcloud 相关单元均为 `not-found/inactive`，Cloudreve 服务重启后恢复正常，失败服务为 0。
 
 上游文档：[部署规划](https://docs.cloudreve.org/en/overview/deploy/)、[官方 Compose](https://github.com/cloudreve/docker-compose)、[反向代理与站点设置](https://docs.cloudreve.org/en/overview/deploy/configure)。

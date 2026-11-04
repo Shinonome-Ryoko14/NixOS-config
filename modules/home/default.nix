@@ -23,7 +23,7 @@
       default-server = "personal"
 
       [servers.personal]
-      endpoint = "https://cache.chumeng.xyz/"
+      endpoint = "https://cache.example.com/"
       token-file = "${config.age.secrets.attic-upload-token.path}"
     '';
   };

@@ -2,7 +2,7 @@
 
 使用 **https://app.pagescms.org/** 官方托管版管理私有仓库
 [lihaoze123/hexo-blog](https://github.com/lihaoze123/hexo-blog)。
-`https://cms.chumeng.xyz` 仅通过原生 Nginx 配置跳转到官方入口。
+`https://cms.example.com` 仅通过原生 Nginx 配置跳转到官方入口。
 
 ## 写作与发布
 
@@ -11,7 +11,7 @@
 3. 确认后在 GitHub 创建 PR 并合并到 `main`；合并触发自动发布。
 
 PR 只检查 Hexo 构建，不再提供自建真实主题预览。正式博客继续使用
-`https://chumeng.xyz`，生成产物仍在 `lihaoze123/lihaoze123.github.io` 的 `main` 分支。
+`https://example.com`，生成产物仍在 `lihaoze123/lihaoze123.github.io` 的 `main` 分支。
 直接编辑 `main` 会立即触发发布，未完成的正文与图片应始终保存在草稿分支。
 
 ## 维护范围

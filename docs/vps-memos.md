@@ -1,10 +1,10 @@
 # VPS Memos
 
-访问 **https://memos.chumeng.xyz**。配置位于 [hosts/vps/memos.nix](../hosts/vps/memos.nix)，由 NixOS 原生 `services.memos` 管理，版本随锁定的 Nixpkgs（当前 0.31.0）。Cloudflare 使用仅 DNS 模式，HTTPS 由现有 Nginx 和 ACME 提供。
+访问 **https://memos.example.com**。配置位于 [hosts/vps/memos.nix](../hosts/vps/memos.nix)，由 NixOS 原生 `services.memos` 管理，版本随锁定的 Nixpkgs（当前 0.31.0）。Cloudflare 使用仅 DNS 模式，HTTPS 由现有 Nginx 和 ACME 提供。
 
 ## 账号与访问
 
-管理员用户名为 `chumeng`。随机初始密码加密保存在 `secrets/memos-admin-password.age`，收件人沿用 VPS、laptop 与 class-user。在仓库根目录执行以下命令查看（会把密码显示到当前终端）：
+管理员用户名为 `ryoko`。随机初始密码加密保存在 `secrets/memos-admin-password.age`，收件人沿用 VPS、laptop 与 class-user。在仓库根目录执行以下命令查看（会把密码显示到当前终端）：
 
 ```bash
 ragenix --rules secrets/secrets.nix -e secrets/memos-admin-password.age --editor cat
@@ -25,11 +25,11 @@ ragenix --rules secrets/secrets.nix -e secrets/memos-admin-password.age --editor
 ## 检查与更新
 
 ```bash
-ssh 'chumeng@<VPS_IP>' 'systemctl status memos nginx --no-pager'
-ssh 'chumeng@<VPS_IP>' 'sudo journalctl -u memos -n 100 --no-pager'
-ssh 'chumeng@<VPS_IP>' 'systemctl list-timers acme-renew-memos.chumeng.xyz.timer'
-ssh 'chumeng@<VPS_IP>' 'systemctl --failed'
-curl --fail https://memos.chumeng.xyz/
+ssh 'ryoko@<VPS_IP>' 'systemctl status memos nginx --no-pager'
+ssh 'ryoko@<VPS_IP>' 'sudo journalctl -u memos -n 100 --no-pager'
+ssh 'ryoko@<VPS_IP>' 'systemctl list-timers acme-renew-memos.example.com.timer'
+ssh 'ryoko@<VPS_IP>' 'systemctl --failed'
+curl --fail https://memos.example.com/
 ```
 
 按照 [VPS 更新流程](vps-installation.md#后续更新) 先构建和预览，再激活。升级时阅读 [Memos 发布说明](https://github.com/usememos/memos/releases)，遵守中间版本迁移要求；不要仅为更新该服务而更新全部 Flake 输入。

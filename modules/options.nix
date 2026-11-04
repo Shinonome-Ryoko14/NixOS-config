@@ -15,7 +15,7 @@ in
     user = {
       name = mkOption {
         type = types.str;
-        default = "chumeng";
+        default = "ryoko";
         description = "The single desktop user managed by this configuration.";
       };
       home = mkOption {

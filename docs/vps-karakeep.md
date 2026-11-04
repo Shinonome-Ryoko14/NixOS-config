@@ -1,10 +1,10 @@
 # Karakeep 收藏与稍后阅读
 
-访问 **https://keep.chumeng.xyz**。配置位于 [hosts/vps/karakeep.nix](../hosts/vps/karakeep.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。Karakeep 0.34.1、上游浏览器镜像和 Meilisearch 1.41.0 均固定镜像摘要，支持 ARM64。
+访问 **https://keep.example.com**。配置位于 [hosts/vps/karakeep.nix](../hosts/vps/karakeep.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。Karakeep 0.34.1、上游浏览器镜像和 Meilisearch 1.41.0 均固定镜像摘要，支持 ARM64。
 
 ## 登录与使用
 
-管理员显示名为 `chumeng`，登录邮箱为 `2595248810@qq.com`。首次账号已初始化，公开注册关闭。在自己的终端查看随机初始密码：
+管理员显示名为 `ryoko`，登录邮箱为 `w13949636385@gmail.com`。首次账号已初始化，公开注册关闭。在自己的终端查看随机初始密码：
 
 ```bash
 ssh vps 'sudo cat /run/agenix/karakeep-admin-password'
@@ -30,7 +30,7 @@ Nginx 将 HTTPS 反代到 `127.0.0.1:3080`，Cloudflare 使用仅 DNS 模式，�
 ```bash
 ssh vps 'systemctl status docker-karakeep docker-karakeep-chrome docker-karakeep-meilisearch --no-pager'
 ssh vps 'sudo journalctl -u docker-karakeep -n 100 --no-pager'
-curl --fail https://keep.chumeng.xyz/api/health
+curl --fail https://keep.example.com/api/health
 ```
 
 容器日志限制为每个 10 MiB × 3，收藏和归档不受此限制。升级时显式修改镜像版本与摘要，再按 [VPS 更新流程](vps-installation.md#后续更新) 先构建预览、后部署，无需更新全部 Flake 输入。新增实例的账号初始化属于一次性操作，不在共享模块中添加初始化或密码重置钩子。

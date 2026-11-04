@@ -1,7 +1,7 @@
 { config, ... }:
 let
   cfg = config.services.forgejo;
-  domain = "git.chumeng.xyz";
+  domain = "git.example.com";
 in
 {
   services.forgejo = {

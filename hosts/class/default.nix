@@ -30,7 +30,7 @@
   };
 
   # Use the writable checkout so LazyExtras can save plugin selections.
-  my.configPath = "/home/chumeng/nixos-config";
+  my.configPath = "/home/ryoko/nixos-config";
   my.home.imports = [ ./home.nix ];
 
   networking.firewall = {

@@ -1,4 +1,5 @@
 # Oracle Cloud ARM VPS. Installation procedure: docs/vps-installation.md.
+# TODO: 把配置与文档中的 example.com 替换为你自己的域名;Nginx 与 ACME 依赖真实域名。
 { config, lib, pkgs, inputs, ... }:
 {
   imports = [
@@ -17,7 +18,7 @@
     ./network-tuning.nix
   ];
 
-  services.nginx.virtualHosts."cms.chumeng.xyz" = {
+  services.nginx.virtualHosts."cms.example.com" = {
     enableACME = true;
     forceSSL = true;
     locations."/".return = "302 https://app.pagescms.org/";

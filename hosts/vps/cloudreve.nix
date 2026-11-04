@@ -95,7 +95,7 @@
 
   services.nginx = {
     enable = true;
-    virtualHosts."pan.chumeng.xyz" = {
+    virtualHosts."pan.example.com" = {
       enableACME = true;
       forceSSL = true;
       extraConfig = ''
@@ -119,7 +119,7 @@
   };
   security.acme = {
     acceptTerms = true;
-    defaults.email = "2595248810@qq.com";
+    defaults.email = "w13949636385@gmail.com";
   };
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 }

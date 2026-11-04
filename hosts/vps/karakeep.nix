@@ -37,7 +37,7 @@ in
         environment = {
           TZ = "Asia/Shanghai";
           DATA_DIR = "/data";
-          NEXTAUTH_URL = "https://keep.chumeng.xyz";
+          NEXTAUTH_URL = "https://keep.example.com";
           DISABLE_SIGNUPS = "true";
           DISABLE_NEW_RELEASE_CHECK = "true";
           MEILI_ADDR = "http://karakeep-meilisearch:7700";
@@ -97,7 +97,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."keep.chumeng.xyz" = {
+  services.nginx.virtualHosts."keep.example.com" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {

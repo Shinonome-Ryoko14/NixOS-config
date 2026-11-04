@@ -146,8 +146,8 @@ in
       };
     })
     {
-      "ab.chumeng.xyz" = 7892;
-      "emby.chumeng.xyz" = 8096;
+      "ab.example.com" = 7892;
+      "emby.example.com" = 8096;
     };
 
   # Nginx provides HTTPS; only the downloader's peer port is published directly.

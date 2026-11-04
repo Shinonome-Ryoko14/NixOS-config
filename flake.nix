@@ -85,7 +85,7 @@
       deploy.nodes.vps = {
         # Logical node name; pass the actual address with --hostname when deploying.
         hostname = "vps";
-        sshUser = "chumeng";
+        sshUser = "ryoko";
         remoteBuild = true;
         autoRollback = true;
         magicRollback = true;

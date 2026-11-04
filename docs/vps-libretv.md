@@ -1,13 +1,13 @@
 # VPS LibreTV
 
-访问 **https://tv.chumeng.xyz**。配置位于 [hosts/vps/libretv.nix](../hosts/vps/libretv.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。使用上游 LibreTV 2.21.0 的 ARM64 镜像并固定摘要；Cloudflare 使用仅 DNS 模式，Nginx 和 ACME 提供 HTTPS。
+访问 **https://tv.example.com**。配置位于 [hosts/vps/libretv.nix](../hosts/vps/libretv.nix)，由 NixOS 管理系统级 Docker 容器，开机自动启动。使用上游 LibreTV 2.21.0 的 ARM64 镜像并固定摘要；Cloudflare 使用仅 DNS 模式，Nginx 和 ACME 提供 HTTPS。
 
 ## 访问密码
 
 站点使用一个共享访问密码，随机密码与独立的会话签名密钥通过 ragenix 加密保存在 `secrets/libretv-env.age`，只授权 VPS、laptop 和 class-user 解密。在自己的终端查看密码：
 
 ```bash
-ssh 'chumeng@<VPS_IP>' 'sudo sed -n "s/^PASSWORD=//p" /run/agenix/libretv-env'
+ssh 'ryoko@<VPS_IP>' 'sudo sed -n "s/^PASSWORD=//p" /run/agenix/libretv-env'
 ```
 
 更改密码时使用 `ragenix --rules secrets/secrets.nix -e secrets/libretv-env.age` 编辑 `PASSWORD`，然后重新部署。需要让已有会话失效时同时重新生成 `PROXY_SECRET`；不要把明文写入仓库或日志。
@@ -23,10 +23,10 @@ LibreTV 是无状态服务，无需数据库或持久卷。观看历史与进度
 容器端口仅发布到 `127.0.0.1:8081`，公网通过现有 443 端口访问，80 用于 HTTPS 跳转和证书签发。视频代理关闭缓冲并允许长连接，登录 Cookie 强制启用 Secure。容器使用上游非 root 用户，日志限制为 10 MiB × 3。
 
 ```bash
-ssh 'chumeng@<VPS_IP>' 'systemctl status docker-libretv nginx --no-pager'
-ssh 'chumeng@<VPS_IP>' 'sudo journalctl -u docker-libretv -n 100 --no-pager'
-ssh 'chumeng@<VPS_IP>' 'systemctl list-timers acme-renew-tv.chumeng.xyz.timer'
-curl --fail https://tv.chumeng.xyz/api/status
+ssh 'ryoko@<VPS_IP>' 'systemctl status docker-libretv nginx --no-pager'
+ssh 'ryoko@<VPS_IP>' 'sudo journalctl -u docker-libretv -n 100 --no-pager'
+ssh 'ryoko@<VPS_IP>' 'systemctl list-timers acme-renew-tv.example.com.timer'
+curl --fail https://tv.example.com/api/status
 ```
 
 升级时核对 [上游发布说明](https://github.com/LibreSpark/LibreTV/releases)，显式更新镜像版本和 ARM64 摘要，按照 [VPS 更新流程](vps-installation.md#后续更新) 先构建和预览，再激活；无需更新全部 Flake 输入。备份加密凭据与可解密的密钥，并按需导出浏览器数据。

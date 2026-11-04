@@ -10,7 +10,7 @@
     secretFile = config.age.secrets.wastebin-env.path;
     settings = {
       WASTEBIN_ADDRESS_PORT = "127.0.0.1:8088";
-      WASTEBIN_BASE_URL = "https://paste.chumeng.xyz";
+      WASTEBIN_BASE_URL = "https://paste.example.com";
       WASTEBIN_MAX_BODY_SIZE = 1048576;
     };
   };
@@ -32,7 +32,7 @@
       limit_req_zone $wastebin_write_key zone=wastebin_writes:10m rate=10r/m;
       limit_conn_zone $binary_remote_addr zone=wastebin_connections:10m;
     '';
-    virtualHosts."paste.chumeng.xyz" = {
+    virtualHosts."paste.example.com" = {
       enableACME = true;
       forceSSL = true;
       locations."/" = {

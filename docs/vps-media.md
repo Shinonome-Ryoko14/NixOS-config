@@ -4,8 +4,8 @@
 
 | 服务 | 访问入口 | 版本 |
 | --- | --- | --- |
-| AutoBangumi | https://ab.chumeng.xyz | 3.3.6 |
-| Emby | https://emby.chumeng.xyz | 4.10.0.40，官方 ARM64 镜像 |
+| AutoBangumi | https://ab.example.com | 3.3.6 |
+| Emby | https://emby.example.com | 4.10.0.40，官方 ARM64 镜像 |
 | qBittorrent | SSH 隧道，见下文 | 5.2.4，LinuxServer 镜像 |
 
 ## 账号与订阅
@@ -13,7 +13,7 @@
 三个服务的初始用户名均为 `admin`，密码各自随机生成。凭据通过 ragenix 加密在 `secrets/media-credentials.age`，只授权 VPS 及现有个人密钥解密。在自己的终端查看：
 
 ```bash
-ssh chumeng@<VPS_IP> 'sudo cat /run/agenix/media-credentials'
+ssh ryoko@<VPS_IP> 'sudo cat /run/agenix/media-credentials'
 ```
 
 该文件记录初始凭据；在网页更改密码后不会自动同步。重新部署不会重置已有账号。qBittorrent 仅在配置不存在时由 [media-seed.py](../hosts/vps/media-seed.py) 初始化，现有配置和账号始终保留。如果更改 qBittorrent 密码，还需同步修改 AutoBangumi 的下载器密码。
@@ -34,7 +34,7 @@ qBittorrent 管理及故障排查可使用隧道（保持 SSH 运行）：
 
 ```bash
 ssh -N -L 8080:127.0.0.1:8080 \
-  -L 7892:127.0.0.1:7892 -L 8096:127.0.0.1:8096 chumeng@<VPS_IP>
+  -L 7892:127.0.0.1:7892 -L 8096:127.0.0.1:8096 ryoko@<VPS_IP>
 ```
 
 随后访问 `http://127.0.0.1:8080`、`http://127.0.0.1:7892`、`http://127.0.0.1:8096`。Emby 客户端优先填写 HTTPS 域名。
@@ -53,11 +53,11 @@ ssh -N -L 8080:127.0.0.1:8080 \
 容器使用专用 `media` 用户（UID/GID 995），配置父目录权限为 `0700`，媒体目录为 `0750`。不要递归改成其他用户。备份时应同时保留应用状态、媒体、加密凭据及可解密密钥；数据库宜停服备份。NixOS 回滚只回滚系统配置，不能恢复数据库或视频。目前没有自动异机备份。
 
 ```bash
-ssh chumeng@<VPS_IP> 'systemctl status docker-autobangumi docker-qbittorrent docker-emby --no-pager'
-ssh chumeng@<VPS_IP> 'sudo journalctl -u docker-autobangumi -n 100 --no-pager'
-ssh chumeng@<VPS_IP> 'df -h /; systemctl --failed --no-pager'
-curl --fail https://ab.chumeng.xyz/health
-curl --fail https://emby.chumeng.xyz/emby/System/Info/Public
+ssh ryoko@<VPS_IP> 'systemctl status docker-autobangumi docker-qbittorrent docker-emby --no-pager'
+ssh ryoko@<VPS_IP> 'sudo journalctl -u docker-autobangumi -n 100 --no-pager'
+ssh ryoko@<VPS_IP> 'df -h /; systemctl --failed --no-pager'
+curl --fail https://ab.example.com/health
+curl --fail https://emby.example.com/emby/System/Info/Public
 ```
 
 升级 AutoBangumi 使用 Nix 配置中的镜像版本，避免应用内在线更新产生与声明版本不同的覆盖层。三个容器日志均限制为 10 MiB × 3；数据库及媒体文件不受此限制。
