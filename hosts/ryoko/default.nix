@@ -1,7 +1,6 @@
 { lib, pkgs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
     ../../profiles/workstation.nix
   ];
 

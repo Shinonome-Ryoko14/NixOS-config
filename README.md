@@ -10,7 +10,7 @@ nixos-rebuild build --flake .#laptop   # 别名 .#nixos
 nixos-rebuild build --flake .#home
 nixos-rebuild build --flake .#class
 
-# 最小系统：先用目标机器生成 hosts/base/hardware-configuration.nix
+# 最小系统：先用目标机器生成 hosts/base/hardware-configuration.nix（不入库，见 hosts/README.md）
 nixos-rebuild build --flake .#base
 ```
 

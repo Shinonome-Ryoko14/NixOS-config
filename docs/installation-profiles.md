@@ -24,15 +24,15 @@ laptop、home、class、base 共用 `modules/nixos/nix-cache.nix` 的下载源�
 日常上传其他输出、校验、密钥轮换与清理见 [私有 Attic 缓存维护](nix-cache.md)。
 `vps` 设置 `my.nix.cacheProfile = "public"`，系统与 Home Manager 都只使用官方缓存，不引入个人下载凭据或私有缓存信任。
 
-`base` 有自己的 `hosts/base/`。新机器上安装前，先用目标机器的硬件配置替换占位文件：
+`base` 有自己的 `hosts/base/`。新机器上安装前,先用目标机器生成硬件配置:
 
 ```bash
-nixos-generate-config --show-hardware-config > hosts/base/hardware-configuration.nix
-jj status   # 让 flake 读取到新文件
+sudo nixos-generate-config --root / --show-hardware-config > hosts/base/hardware-configuration.nix
+git add -N -f hosts/base/hardware-configuration.nix   # 让 flake 读取到新文件(不便入库)
 nixos-rebuild build --flake .#base
 ```
 
-占位的 `hardware-configuration.nix` 只用于让仓库能求值（按 NixOS 手册的 `nixos` / `boot` 分区标签），不能直接用于实际机器。需要桌面时在 `hosts/base/default.nix` 中导入 `../../profiles/workstation.nix`；以后为这台机器单独建主机目录时，复制 `hosts/base` 作为起点，并在 `flake.nix` 中加一行 `mkHost "<主机名>"`。
+`hardware-configuration.nix` 含有磁盘 UUID 等仅属于本机的信息,已被 `.gitignore` 排除,不进仓库;`git add -N -f` 只登记「intent-to-add」,不会把内容写进提交。详见 [hosts/README.md](../hosts/README.md#硬件配置不入库)。需要桌面时在 `hosts/base/default.nix` 中导入 `../../profiles/workstation.nix`;以后为这台机器单独建主机目录时,复制 `hosts/base` 作为起点,并在 `flake.nix` 中加一行 `mkHost "<主机名>"`。
 
 ## 开关与 profile
 

@@ -3,5 +3,5 @@
 # ../../profiles/workstation.nix; see modules/options.nix for all switches.
 { ... }:
 {
-  imports = [ ./hardware-configuration.nix ];
+  # hardware-configuration.nix 由 nixos-generate-config 在本机生成,见 hosts/README.md。
 }

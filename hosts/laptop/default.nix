@@ -1,7 +1,6 @@
 { config, lib, inputs, ... }:
 {
   imports = [
-    ./hardware-configuration.nix
     ./hardware.nix
     ../../profiles/personal.nix
     inputs.nur.repos.lihaoze123.modules.nixos.gxfp5130-chicago
