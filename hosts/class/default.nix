@@ -52,10 +52,10 @@
   age.identityPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   users.users.root.openssh.authorizedKeys.keys = [
-    (import ../../secrets/keys.nix).laptop
+    (import ../../secrets/keys.nix).ryoko
   ];
   users.users.${config.my.user.name}.openssh.authorizedKeys.keys = [
-    (import ../../secrets/keys.nix).laptop
+    (import ../../secrets/keys.nix).ryoko
   ];
 
   # Existing Windows ESP: mount only, outside disko's formatting scope.

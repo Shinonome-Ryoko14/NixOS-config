@@ -5,7 +5,7 @@
   ];
 
   users.users.root.openssh.authorizedKeys.keys = [
-    (import ../../secrets/keys.nix).laptop
+    (import ../../secrets/keys.nix).ryoko
   ];
   services.openssh.enable = true;
 
