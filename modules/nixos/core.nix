@@ -35,7 +35,8 @@ in
     extraGroups = [ "networkmanager" "wheel" ];
   };
 
-  age.identityPaths = lib.mkDefault [ "${user.home}/.ssh/id_rsa" ];
+  # ragenix 用这把私钥解密 secrets/*.age;与 secrets/keys.nix 中的公钥配对。
+  age.identityPaths = lib.mkDefault [ "${user.home}/.ssh/id_ed25519" ];
 
   services.openssh.enable = true;
   programs.mosh.enable = true;
