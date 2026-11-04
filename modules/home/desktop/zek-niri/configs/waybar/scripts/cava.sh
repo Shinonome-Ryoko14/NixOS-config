@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # 强制 UTF-8：下面按“字符”而不是“字节”切分 CHARS；C locale 会把 ▁ 当 3 字节。
 export LC_ALL=C.UTF-8
 

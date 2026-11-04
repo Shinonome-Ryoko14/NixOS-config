@@ -9,11 +9,11 @@ binds {
     Mod+Shift+ESCAPE                     { show-hotkey-overlay; }
 
     // ─── Applications ───
-    Mod+Return                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
+    Mod+Return                          hotkey-overlay-title="Open Terminal: Kitty" { spawn "kitty"; }
     Mod+B                               hotkey-overlay-title="Open Browser: firefox" { spawn "firefox"; }
 
     // --- ZEKniri overlay menu ---
-    Ctrl+MouseMiddle                    hotkey-overlay-title="Open ZEKniri menu" { spawn-sh "exec \"$HOME/.local/bin/ZEK-menu\" --middle"; }
+    Ctrl+MouseMiddle                    hotkey-overlay-title="Open ZEKniri menu" { spawn-sh "exec ZEK-menu --middle"; }
 
     // --- Noctalia ---
     Mod+Shift+Return                    hotkey-overlay-title="Open Wallpaper Selector: noctalia wallpaper toggle" { spawn-sh "noctalia msg panel-toggle wallpaper"; }

@@ -131,6 +131,7 @@ in
       };
       wallpaperEngine.enable = mkEnableOption "Wallpaper Engine animated wallpapers with the DMS plugin";
       noctalia.enable = mkEnableOption "Noctalia Shell bar replacing the DMS DankBar";
+      zekNiri.enable = mkEnableOption "ZEKniri look: Waybar bar, Noctalia panels, ZEK niri animations, blur and theme";
       codexComputerUse.enable = mkEnableOption "Codex Desktop Computer Use integration";
       easyeffects.enable = mkEnableOption "EasyEffects microphone denoising";
       phone.enable = mkEnableOption "Valent / KDE Connect phone integration";
@@ -194,6 +195,7 @@ in
       chrome.enable = mkEnableOption "Google Chrome";
       wechat.enable = mkEnableOption "WeChat";
       qq.enable = mkEnableOption "QQ";
+      neteaseMusic.enable = mkEnableOption "Netease Cloud Music (netease-cloud-music-gtk)";
       telegram.enable = mkEnableOption "Telegram Desktop";
       mpv.enable = mkEnableOption "mpv";
       vlc.enable = mkEnableOption "VLC";
@@ -216,7 +218,7 @@ in
 
   config.assertions = map
     (name: requires cfg.apps.${name}.enable cfg.desktop.enable "apps.${name}" "desktop")
-    [ "edge" "chrome" "wechat" "qq" "telegram" "mpv" "vlc" "obs" "vscode" "anki" "obsidian" ]
+    [ "edge" "chrome" "wechat" "qq" "neteaseMusic" "telegram" "mpv" "vlc" "obs" "vscode" "anki" "obsidian" ]
   ++ [
     {
       assertion = !(cfg.network.proxy.backend == "honk" && config.services.dae.enable);
@@ -226,6 +228,7 @@ in
     (requires cfg.desktop.graphicalBoot.enable cfg.desktop.enable "desktop.graphicalBoot" "desktop")
     (requires cfg.desktop.wallpaperEngine.enable cfg.desktop.enable "desktop.wallpaperEngine" "desktop")
     (requires cfg.desktop.noctalia.enable cfg.desktop.enable "desktop.noctalia" "desktop")
+    (requires cfg.desktop.zekNiri.enable cfg.desktop.enable "desktop.zekNiri" "desktop")
     (requires cfg.desktop.codexComputerUse.enable cfg.desktop.enable "desktop.codexComputerUse" "desktop")
     (requires cfg.desktop.easyeffects.enable cfg.desktop.enable "desktop.easyeffects" "desktop")
     (requires cfg.desktop.phone.enable cfg.desktop.enable "desktop.phone" "desktop")

@@ -17,11 +17,19 @@
     apps = {
       edge.enable = true;
       chrome.enable = true;
+      wechat.enable = true;
+      qq.enable = true;
+      neteaseMusic.enable = true;
     };
     programs.appimage.enable = true;
     programs.steam.enable = true;
-    desktop.wallpaperEngine.enable = true;
+    desktop.wallpaperEngine.enable = false;
     desktop.noctalia.enable = true;
+    desktop.zekNiri.enable = true;
+    desktop.outputs."eDP-1" = {
+      mode = "1920x1080@60.000";
+      scale = 1;
+    };
   };
 
   boot.loader = {

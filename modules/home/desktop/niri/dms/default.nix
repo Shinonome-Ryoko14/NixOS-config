@@ -134,7 +134,10 @@ in
     };
 
     xdg.configFile = {
-      "niri/config.kdl".source = ./niri.kdl;
+      # ZEKniri supplies its own niri/config.kdl and base layout.
+      "niri/config.kdl" = lib.mkIf (!osConfig.my.desktop.zekNiri.enable) {
+        source = ./niri.kdl;
+      };
       "niri/outputs.kdl".text = osConfig.my.desktop.outputsConfig;
       "niri/computer-use.kdl" = lib.mkIf osConfig.my.desktop.codexComputerUse.enable {
         source = ../computer-use.kdl;
@@ -142,10 +145,12 @@ in
       "niri/wallpaper-engine.kdl" = lib.mkIf osConfig.my.desktop.wallpaperEngine.enable {
         source = ./wallpaper-engine.kdl;
       };
-      "niri/base.kdl".source =
-        if osConfig.my.configPath != null
-        then config.lib.file.mkOutOfStoreSymlink "${osConfig.my.configPath}/modules/home/desktop/niri/config.kdl"
-        else ../config.kdl;
+      "niri/base.kdl" = lib.mkIf (!osConfig.my.desktop.zekNiri.enable) {
+        source =
+          if osConfig.my.configPath != null
+          then config.lib.file.mkOutOfStoreSymlink "${osConfig.my.configPath}/modules/home/desktop/niri/config.kdl"
+          else ../config.kdl;
+      };
       "niri/dms-bindings.kdl".text = lib.concatStringsSep "\n" (
         builtins.filter
           (line: osConfig.my.input.speech.enable || !(lib.hasInfix "vocotypeHotwords" line))

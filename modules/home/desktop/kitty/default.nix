@@ -1,8 +1,11 @@
 { config, lib, pkgs, osConfig, ... }:
 lib.mkIf osConfig.my.desktop.enable {
-  xdg.configFile."kitty" = {
+  # ZEKniri supplies ~/.config/kitty when enabled.
+  xdg.configFile."kitty" = lib.mkIf (!osConfig.my.desktop.zekNiri.enable) {
     source = ./config;
     recursive = true;
   };
-  programs.kitty.enable = true;
+  # ZEKniri ships its own kitty.conf; do not let the upstream module also
+  # generate kitty/kitty.conf next to the recursive directory link.
+  programs.kitty.enable = !osConfig.my.desktop.zekNiri.enable;
 }

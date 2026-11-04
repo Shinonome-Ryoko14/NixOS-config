@@ -7,6 +7,7 @@ let
     chrome = [ google-chrome ];
     wechat = [ wechat ];
     qq = [ qq ];
+    neteaseMusic = [ netease-cloud-music-gtk ];
     telegram = [ telegram-desktop ];
     vlc = [ vlc ];
     ytDlp = [ yt-dlp ];

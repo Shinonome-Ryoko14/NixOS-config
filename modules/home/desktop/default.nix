@@ -3,6 +3,7 @@
   # Each module is gated by osConfig.my.desktop or a more specific switch.
   imports = [
     ./niri
+    ./zek-niri
     ./fcitx5
     ./kitty
     ./file-manager.nix

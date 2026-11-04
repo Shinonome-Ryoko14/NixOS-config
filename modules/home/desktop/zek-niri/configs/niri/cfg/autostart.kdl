@@ -3,7 +3,9 @@
 
     // Noctalia is started by its home-manager systemd user service.
     // spawn-at-startup "noctalia"
-    spawn-at-startup "waybar"
+    // Waybar is managed by the waybar.service systemd user service so that it
+    // comes back automatically if a theme/palette reload crashes it.
+    // spawn-at-startup "waybar"
     spawn-at-startup "mark-shot"
     // ZEKniri 的壁纸配色监听由 systemd 用户服务管理（`ZEK-niri watch install`），
     // 不再在这里重复 spawn，避免两个 watcher 抢同一把锁。

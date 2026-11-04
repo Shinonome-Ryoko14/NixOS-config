@@ -36,6 +36,12 @@
     # present in noctalia.cachix.org; do not add nixpkgs.follows or the cache
     # hashes change and the shell has to be compiled locally.
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    # ZEKniri desktop configuration source (niri, waybar, noctalia, cava...).
+    zek-niri = {
+      url = "github:sky1234762/ZEK-niri";
+      flake = false;
+    };
+    mark-shot.url = "github:jswysnemc/mark-shot";
     daeuniverse.url = "github:daeuniverse/flake.nix";
     geodb = {
       url = "github:Loyalsoldier/v2ray-rules-dat/release";
