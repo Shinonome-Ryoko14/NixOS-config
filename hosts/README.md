@@ -38,6 +38,10 @@ git add -N -f "hosts/$(hostname)/hardware-configuration.nix"
 `.githooks/pre-commit` 会在 `git add -A` 误暂存时自动撤销内容,只保留这个标记。
 仓库克隆到新机器后,第一次构建前必须重新执行上面两条命令。
 
+> 切换分支前先执行 `git reset -- hosts/*/hardware-configuration.nix`,否则 Git 会把
+> 带 intent-to-add 标记的文件当成待删除的跟踪文件,连本地文件一起移除。内容不会真正
+> 丢失,可用 `git show <提交>:hosts/<主机>/hardware-configuration.nix` 恢复。
+
 ## Adding a New Host
 
 1. Create a new directory: `mkdir hosts/new-host`
