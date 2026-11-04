@@ -9,7 +9,14 @@ in
 {
   programs.git = {
     enable = true;
-    settings.user = identity;
+    settings = {
+      user = identity;
+      # GitHub is only reachable through the local Clash Verge (mihomo) proxy.
+      # Change the port here if the proxy's mixed-port is configured differently.
+      http."https://github.com/".proxy = "http://127.0.0.1:7897";
+      credential."https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+      credential."https://gist.github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
+    };
   };
 
   programs.delta = {
