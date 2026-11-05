@@ -80,4 +80,25 @@ lib.mkIf osConfig.my.ai.enable {
       haiku = "gpt-5.5";
     })
   ];
+
+  # OpenCode 的配置很小,托管进仓库以便新机器保持一致。
+  # service.json 含本地服务密码,不纳入;由 OpenCode 首次运行时自行生成。
+  xdg.configFile."opencode/cli.json" = {
+    force = true;
+    text = builtins.toJSON { theme.name = "synthwave84"; };
+  };
+  xdg.configFile."opencode/opencode.jsonc" = {
+    force = true;
+    text = ''
+      {
+        "$schema": "https://opencode.ai/config.json"
+      }
+    '';
+  };
+  xdg.configFile."opencode/package.json" = {
+    force = true;
+    text = builtins.toJSON {
+      dependencies."@opencode-ai/plugin" = "1.15.10";
+    };
+  };
 }
