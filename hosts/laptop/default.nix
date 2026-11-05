@@ -7,6 +7,7 @@
   ];
 
   my = {
+    user.name = "ryoko";
     # Applications already in use on this machine, beyond the profile's Edge and mpv.
     apps = {
       chrome.enable = true;

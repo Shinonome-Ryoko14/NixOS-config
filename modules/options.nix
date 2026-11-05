@@ -15,8 +15,12 @@ in
     user = {
       name = mkOption {
         type = types.str;
-        default = "ryoko";
-        description = "The single desktop user managed by this configuration.";
+        example = "ryoko";
+        description = ''
+          The single desktop user managed by this configuration. Every host must
+          set it explicitly; there is no default, so a fresh clone cannot silently
+          create a user that already exists on someone else's machine.
+        '';
       };
       home = mkOption {
         type = types.str;
@@ -130,6 +134,17 @@ in
         description = "niri KDL generated from my.desktop.outputs.";
       };
       wallpaperEngine.enable = mkEnableOption "Wallpaper Engine animated wallpapers with the DMS plugin";
+      wallpaperDir = mkOption {
+        type = types.str;
+        default = "${cfg.user.home}/Pictures/wallpaper";
+        defaultText = lib.literalExpression "\"\${config.my.user.home}/Pictures/wallpaper\"";
+        example = "/home/ryoko/图片/wallpaper";
+        description = ''
+          Directory the desktop reads wallpapers from and where the ZEK-niri
+          activation seeds its bundled wallpapers. Override it on hosts that use
+          a localized XDG directory (for example ~/图片/wallpaper).
+        '';
+      };
       noctalia.enable = mkEnableOption "Noctalia Shell bar replacing the DMS DankBar";
       zekNiri.enable = mkEnableOption "ZEKniri look: Waybar bar, Noctalia panels, ZEK niri animations, blur and theme";
       codexComputerUse.enable = mkEnableOption "Codex Desktop Computer Use integration";

@@ -3,7 +3,7 @@ let
   cfg = osConfig.my.desktop.noctalia;
   zek = osConfig.my.desktop.zekNiri.enable;
   home = config.home.homeDirectory;
-  wallpaper = "${home}/图片/wallpaper";
+  wallpaper = osConfig.my.desktop.wallpaperDir;
 in
 {
   imports = [ inputs.noctalia.homeModules.default ];

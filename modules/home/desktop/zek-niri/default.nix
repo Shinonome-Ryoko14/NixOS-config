@@ -3,7 +3,7 @@ let
   cfg = osConfig.my.desktop.zekNiri;
   zek = inputs.zek-niri;
   home = config.home.homeDirectory;
-  wallpaperDir = "${home}/图片/wallpaper";
+  wallpaperDir = osConfig.my.desktop.wallpaperDir;
 
   # ZEK-menu needs PyGObject plus the GTK 3 / layer-shell typelibs.
   pythonGtk = pkgs.python3.withPackages (ps: [ ps.pygobject3 ]);
@@ -116,13 +116,13 @@ lib.mkIf cfg.enable {
       "$HOME/.config/ZEKniri" \
       "$HOME/.config/alacritty" \
       "$HOME/.config/cava" \
-      "$HOME/图片/wallpaper"
+      "${wallpaperDir}"
 
     # Wallpaper pack from the ZEKniri repository. `cp -a` preserves the Nix
     # store's 0555 directory mode, so restore write access afterwards or
     # Noctalia cannot add downloaded wallpapers to this folder.
-    run cp -an ${zek}/assets/wallpapers/. "$HOME/图片/wallpaper/" || true
-    run chmod -R u+w "$HOME/图片/wallpaper"
+    run cp -an ${zek}/assets/wallpapers/. "${wallpaperDir}/" || true
+    run chmod -R u+w "${wallpaperDir}"
 
     # Noctalia templates rewrite these files, so they are writable copies.
     run cp -an ${./configs/alacritty}/. "$HOME/.config/alacritty/" || true

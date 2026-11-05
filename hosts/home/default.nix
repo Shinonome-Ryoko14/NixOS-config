@@ -10,6 +10,7 @@ in
   ];
 
   my = {
+    user.name = "ryoko";
     network.proxy.backend = "dae";
     # wallpaperEngine, podman, libvirt and waydroid stay off here.
     desktop.outputs."DP-1" = {

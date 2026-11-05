@@ -26,6 +26,8 @@
     desktop.wallpaperEngine.enable = false;
     desktop.noctalia.enable = true;
     desktop.zekNiri.enable = true;
+    # 本机沿用带中文目录名的壁纸目录;其他主机默认 ~/Pictures/wallpaper。
+    desktop.wallpaperDir = "/home/ryoko/图片/wallpaper";
     desktop.outputs."eDP-1" = {
       mode = "1920x1080@60.000";
       scale = 1;

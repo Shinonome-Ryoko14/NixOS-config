@@ -25,6 +25,7 @@
   };
 
   my = {
+    user.name = "ryoko";
     configPath = null;
     nix.cacheProfile = "public";
     virtualisation.docker.enable = true;

@@ -9,6 +9,7 @@
   ];
 
   my = {
+    user.name = "ryoko";
     desktop = {
       graphicalBoot.enable = true;
       codexComputerUse.enable = true;
