@@ -118,11 +118,10 @@ lib.mkIf cfg.enable {
       "$HOME/.config/cava" \
       "${wallpaperDir}"
 
-    # Wallpaper pack from the ZEKniri repository. `cp -a` preserves the Nix
-    # store's 0555 directory mode, so restore write access afterwards or
-    # Noctalia cannot add downloaded wallpapers to this folder.
-    run cp -an ${zek}/assets/wallpapers/. "${wallpaperDir}/" || true
-    run chmod -R u+w "${wallpaperDir}"
+    # 只准备空的壁纸目录,不再复制 ZEKniri 自带的壁纸包:
+    # 那些图片每次激活都会以 `cp -n` 补回,删掉也会复活,所以直接不播种。
+    # 新机器上把需要的壁纸放进 ${wallpaperDir} 即可。
+    # (目录权限由 mkdir 按当前用户创建,无需额外 chmod。)
 
     # Noctalia templates rewrite these files, so they are writable copies.
     run cp -an ${./configs/alacritty}/. "$HOME/.config/alacritty/" || true
