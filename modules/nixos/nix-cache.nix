@@ -13,25 +13,33 @@ let
   desktopCaches = lib.optional config.my.desktop.enable noctaliaCache.url;
   desktopKeys = lib.optional config.my.desktop.enable noctaliaCache.key;
   private = config.my.nix.cacheProfile == "private";
+  # The Attic credentials are optional: a fresh clone has no secrets/, so never
+  # make evaluation or the system closure depend on a file that does not exist.
+  hasNetrc = private && builtins.pathExists ../../secrets/attic-netrc.age;
 in
 {
-  age.secrets.attic-netrc = lib.mkIf private {
+  warnings = lib.optional (private && !hasNetrc) ''
+    my.nix.cacheProfile = "private" 但 secrets/attic-netrc.age 不存在;
+    已忽略私人缓存,只用 cache.nixos.org。需要时用 ragenix 重新创建该文件。
+  '';
+
+  age.secrets.attic-netrc = lib.mkIf hasNetrc {
     file = ../../secrets/attic-netrc.age;
     mode = "0400";
   };
 
-  systemd.services.nix-daemon = lib.mkIf private {
+  systemd.services.nix-daemon = lib.mkIf hasNetrc {
     restartTriggers = [ config.age.secrets.attic-netrc.file ];
   };
 
   nix.settings = {
     # Only import our private cache; project caches (including lantian) stay disabled.
     substituters = lib.mkForce (
-      (if private then baseCaches ++ [ privateCache.url ] else [ "https://cache.nixos.org" ])
+      (if hasNetrc then baseCaches ++ [ privateCache.url ] else [ "https://cache.nixos.org" ])
       ++ desktopCaches
     );
     extra-substituters = lib.mkForce [ ];
-    extra-trusted-public-keys = lib.mkForce (lib.optionals private [ privateCache.key ] ++ desktopKeys);
-    netrc-file = lib.mkIf private config.age.secrets.attic-netrc.path;
+    extra-trusted-public-keys = lib.mkForce (lib.optionals hasNetrc [ privateCache.key ] ++ desktopKeys);
+    netrc-file = lib.mkIf hasNetrc config.age.secrets.attic-netrc.path;
   };
 }

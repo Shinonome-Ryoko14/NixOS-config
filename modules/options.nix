@@ -69,8 +69,8 @@ in
     };
     nix.cacheProfile = mkOption {
       type = types.enum [ "private" "public" ];
-      default = "private";
-      description = "Cache policy; private enables the configured public project caches and Attic by default; public uses only cache.nixos.org and requires no private cache credentials.";
+      default = "public";
+      description = "Cache policy; public uses only cache.nixos.org and requires no credentials, private additionally enables the Attic cache in secrets/attic-netrc.age.";
     };
     ai.enable = mkEnableOption "Claude Code, Codex and OpenCode CLI tools";
 
