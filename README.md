@@ -4,7 +4,7 @@
 
 ## 复用这个仓库前
 
-这是一份**个人配置**，不是开箱即用的模板。提交历史中较早的部分来自上游配置（chumeng），本仓库在其基础上维护。直接 clone 后，构建前至少需要：
+这是一份**个人配置**，不是开箱即用的发行版模板。提交历史中较早的部分来自上游配置（chumeng），本仓库在其基础上维护。仓库只有一个 `main` 分支，clone 得到的就是当前正在运行的配置；唯一与具体机器绑定、必须重新生成的是硬件配置。构建前至少需要：
 
 1. **准备主机**：复制 `hosts/base/` 作为起点，并设置 `my.user.name`（没有默认值，必须显式声明）。
 2. **生成硬件配置**（不入库）：
@@ -17,7 +17,7 @@
 3. **在 `flake.nix` 注册**：`nixosConfigurations.<主机> = mkHost "<主机>";`
 4. **可选 secrets**：仓库不含任何 `.age` 文件。需要 AI、代理、云服务时，先把自己的公钥写入 `secrets/keys.nix`，再用 `ragenix -e secrets/<名字>.age` 创建。
 5. **可选域名**：VPS 配置以 `example.com` 占位，部署前替换。
-6. **AI CLI 的配置不在仓库内**：`opencode`、`claude-code`、`codex` 只安装二进制，配置分别在 `~/.config/opencode`、`~/.claude`、`~/.codex`，需自行准备。
+6. **AI CLI**：`opencode`、`claude-code`、`codex` 的二进制由配置安装；OpenCode 的主题与基础配置已托管进 Home Manager，`service.json`（含本地服务密码，不入库）由 OpenCode 首次运行时生成。
 
 `hosts/class`、`hosts/home`、`hosts/laptop`、`hosts/vps` 是原作者机器的配置，不需要时可直接删除。
 
