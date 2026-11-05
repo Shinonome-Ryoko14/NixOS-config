@@ -2,6 +2,25 @@
 
 模块化 NixOS + Home Manager 配置，支持 laptop、home、class 桌面主机、ARM64 Oracle Cloud `vps`，以及供新机器首次安装的最小配置 `base`。桌面主机选择一个 profile（`workstation` 或 `personal`），再在自己的 `default.nix` 中覆盖 `my.*` 开关。日常应用全部声明在配置中，`nix profile` 只用于试用；编程环境由各项目自己的 devShell 管理。
 
+## 复用这个仓库前
+
+这是一份**个人配置**，不是开箱即用的模板。提交历史中较早的部分来自上游配置（chumeng），本仓库在其基础上维护。直接 clone 后，构建前至少需要：
+
+1. **准备主机**：复制 `hosts/base/` 作为起点，并设置 `my.user.name`（没有默认值，必须显式声明）。
+2. **生成硬件配置**（不入库）：
+   ```bash
+   sudo nixos-generate-config --root / --show-hardware-config \
+     > hosts/<主机>/hardware-configuration.nix
+   git add -N -f hosts/<主机>/hardware-configuration.nix
+   ```
+   `git add -N -f` 不能省略，否则 flake 看不到该文件。详见 [hosts/README.md](hosts/README.md)。
+3. **在 `flake.nix` 注册**：`nixosConfigurations.<主机> = mkHost "<主机>";`
+4. **可选 secrets**：仓库不含任何 `.age` 文件。需要 AI、代理、云服务时，先把自己的公钥写入 `secrets/keys.nix`，再用 `ragenix -e secrets/<名字>.age` 创建。
+5. **可选域名**：VPS 配置以 `example.com` 占位，部署前替换。
+6. **AI CLI 的配置不在仓库内**：`opencode`、`claude-code`、`codex` 只安装二进制，配置分别在 `~/.config/opencode`、`~/.claude`、`~/.codex`，需自行准备。
+
+`hosts/class`、`hosts/home`、`hosts/laptop`、`hosts/vps` 是原作者机器的配置，不需要时可直接删除。
+
 ## 安装与构建
 
 ```bash

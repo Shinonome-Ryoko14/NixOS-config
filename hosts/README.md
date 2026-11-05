@@ -45,10 +45,14 @@ git add -N -f "hosts/$(hostname)/hardware-configuration.nix"
 ## Adding a New Host
 
 1. Create a new directory: `mkdir hosts/new-host`
-2. Copy `base/default.nix` and import a profile (e.g. `../../profiles/workstation.nix`)
+2. Copy `base/default.nix`, set `my.user.name` (required, no default) and import a profile (e.g. `../../profiles/workstation.nix`)
 3. Generate hardware configuration with the two commands above
 4. Add `nixosConfigurations.new-host = mkHost "new-host";` to `flake.nix`
 5. Add `home.nix` and `my.home.imports = [ ./home.nix ];` if the host needs Home Manager overrides; set `my.configPath = null;` when the machine has no checkout at `~/nixos-config`
+
+Secrets are optional: `my.nix.cacheProfile` defaults to `public`, and no `.age`
+file is required to build. Only when you actually need a secret do you add your
+public key to `secrets/keys.nix` and create it with `ragenix -e`.
 
 `mkHost "name"` defaults to x86_64 Linux. For another architecture use
 `mkHost { name = "vps"; system = "aarch64-linux"; }`; this also passes the correct
