@@ -21,6 +21,25 @@
 
 `hosts/class`、`hosts/home`、`hosts/laptop`、`hosts/vps` 是原作者机器的配置，不需要时可直接删除。
 
+## 换电脑 / 重装
+
+新机器（或重装）复用当前配置，只需克隆后生成该机的硬件配置：
+
+```bash
+git clone https://github.com/Shinonome-Ryoko14/NixOS-config.git ~/nixos-config
+cd ~/nixos-config
+sudo nixos-generate-config --root / --show-hardware-config > hosts/ryoko/hardware-configuration.nix
+git add -N -f hosts/ryoko/hardware-configuration.nix
+sudo nixos-rebuild switch --flake .#ryoko
+```
+
+前提：新机器的用户名与主机名都是 `ryoko`，且仓库位于 `~/nixos-config`。
+不同的话修改 `hosts/ryoko/default.nix` 里的 `my.user.name` 和 `configPath`，
+必要时把目录重命名为新主机名并在 `flake.nix` 注册。
+
+注意：`hardware-configuration.nix` 含有本机磁盘 UUID，不能复用其他机器的文件；
+上面的 `nixos-generate-config` 必须在目标机器上执行。
+
 ## 安装与构建
 
 ```bash
