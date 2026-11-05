@@ -87,10 +87,12 @@ in
           theme = {
             builtin = "Tokyo-Night";
             community_palette = "Oxide";
+            # Kept so a manual `color-scheme-set custom ZEKniri-preset` still works.
             custom_palette = "ZEKniri-preset";
             mode = "dark";
             shell_mode = "light";
-            source = "custom";
+            # Follow the wallpaper so Waybar and Noctalia stay in sync automatically.
+            source = "wallpaper";
             wallpaper_scheme = "soft";
             sync_color_scheme = false;
           };
@@ -329,6 +331,17 @@ in
             };
           };
         });
+    };
+
+    # Reload Waybar whenever Noctalia resolves a new palette. The Waybar
+    # template's own post_hook already does this, but the hook makes the
+    # reload independent of template-apply coalescing during rapid wallpaper
+    # changes. reload-waybar.sh serialises and debounces the signal.
+    xdg.configFile."noctalia/hooks.toml" = lib.mkIf zek {
+      text = ''
+        [hooks]
+        colors_changed = "bash $HOME/.config/waybar/scripts/reload-waybar.sh || true"
+      '';
     };
   };
 }

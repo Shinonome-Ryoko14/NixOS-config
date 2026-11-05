@@ -23,7 +23,6 @@
     ],
     "modules-center": [
         "custom/left_div#3",
-	"custom/colors-theme",
 	// 左键开kitty，右键开alacritty
 	"custom/actions",
         "custom/wallpapers",

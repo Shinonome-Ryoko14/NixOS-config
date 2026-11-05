@@ -366,10 +366,10 @@
  "custom/wallpapers":{
     "format":"󰸉",
     "tooltip-format":"左键：打开壁纸面板\n右键：随机切换壁纸\n中键：下一张壁纸",
-    // 切换后顺带套用当前壁纸对应的配色（ZEK-niri watch 也在后台监听，这里是即时触发）
+    // Noctalia 会从新壁纸自动重新取色，并通过 colors_changed hook 重载 Waybar。
     "on-click":"noctalia msg panel-toggle wallpaper",
-    "on-click-right":"noctalia msg wallpaper-random; ZEK-niri palette --wait",
-    "on-click-middle":"noctalia msg wallpaper-next; ZEK-niri palette --wait"
+    "on-click-right":"noctalia msg wallpaper-random",
+    "on-click-middle":"noctalia msg wallpaper-next"
  },
  // 常用命令
  "custom/actions":{
@@ -378,15 +378,6 @@
    // 一个神秘小bug,因为之前终端和wayabr在一个cgroup里，导致waybar寄连带终端一起寄，现在不会了
    "on-click":"setsid -f systemd-run --user --scope --collect --quiet -- kitty",
    "on-click-right":"setsid -f systemd-run --user --scope --collect --quiet -- alacritty"
- },
-
- // 配色切换：预设<-> Noctalia取色器
- "custom/colors-theme":{
-   "format":"{}",
-   "return-type":"json",
-   "exec":"~/.config/waybar/scripts/toggle-colors.sh status",
-   "tooltip":true,
-   "on-click":"~/.config/waybar/scripts/toggle-colors.sh toggle"
  }
 
 }

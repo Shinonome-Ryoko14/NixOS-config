@@ -36,13 +36,13 @@ let
     chmod -R u+w $out
     rm -f $out/animations.kdl
   '';
-  # toggle-colors.sh rewrites colors-active.css, and Noctalia generates
-  # colors-noctalia.css; both must stay writable.
+  # Noctalia generates colors-noctalia.css, so keep it out of the read-only
+  # store tree and seed it as a writable file instead.
   waybarConfig = pkgs.runCommand "zek-waybar-config" { } ''
     mkdir -p $out
     cp -a ${./configs/waybar}/. $out/
     chmod -R u+w $out
-    rm -f $out/colors-active.css $out/colors-noctalia.css
+    rm -f $out/colors-noctalia.css
   '';
 
 in
@@ -132,9 +132,6 @@ lib.mkIf cfg.enable {
     if [ ! -e "$HOME/.config/niri/animations.kdl" ]; then
       run install -m 0644 ${./configs/niri/animations.kdl} "$HOME/.config/niri/animations.kdl"
     fi
-    if [ ! -e "$HOME/.config/waybar/colors-active.css" ]; then
-      run install -m 0644 ${./configs/waybar/colors-active.css} "$HOME/.config/waybar/colors-active.css"
-    fi
     if [ ! -e "$HOME/.config/waybar/colors-noctalia.css" ]; then
       run install -m 0644 ${./configs/waybar/colors-noctalia.css} "$HOME/.config/waybar/colors-noctalia.css"
     fi
@@ -163,29 +160,6 @@ lib.mkIf cfg.enable {
       ExecReload = "kill -SIGUSR2 $MAINPID";
       Restart = "on-failure";
       RestartSec = 2;
-    };
-    Install.WantedBy = [ "graphical-session.target" ];
-  };
-
-  # ZEK-niri follows Noctalia wallpaper changes and applies the matching palette.
-  systemd.user.services.zek-niri-watch = {
-    Unit = {
-      Description = "ZEK-niri wallpaper palette watcher";
-      After = [ "graphical-session.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${zekCli}/bin/ZEK-niri watch 2";
-      Restart = "on-failure";
-      RestartSec = 5;
-      Environment = "PATH=${
-        lib.makeBinPath [
-          config.programs.noctalia.package
-          pkgs.bash
-          pkgs.coreutils
-          pkgs.gnugrep
-        ]
-      }";
     };
     Install.WantedBy = [ "graphical-session.target" ];
   };
