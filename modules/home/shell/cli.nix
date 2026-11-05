@@ -11,9 +11,9 @@ in
     enable = true;
     settings = {
       user = identity;
-      # GitHub is only reachable through the local Clash Verge (mihomo) proxy.
-      # Change the port here if the proxy's mixed-port is configured differently.
-      http."https://github.com/".proxy = "http://127.0.0.1:7897";
+      # GitHub 直连即可。不要把代理写死在这里:`http.proxy` 同时作用于 push,
+      # 经 mihomo 转发时 GitHub 会返回 `remote: fatal error in commit_refs`。
+      # 确实需要代理时,临时用 `HTTPS_PROXY=... git push` 或 `git -c http.proxy=...`。
       credential."https://github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
       credential."https://gist.github.com".helper = "!${pkgs.gh}/bin/gh auth git-credential";
     };
