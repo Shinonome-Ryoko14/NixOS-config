@@ -341,6 +341,7 @@ in
       text = ''
         [hooks]
         colors_changed = "bash $HOME/.config/waybar/scripts/reload-waybar.sh || true"
+        wallpaper_changed = "dms ipc call settings set lockScreenWallpaperPath \"$NOCTALIA_WALLPAPER_PATH\" >/dev/null 2>&1 || true"
       '';
     };
   };

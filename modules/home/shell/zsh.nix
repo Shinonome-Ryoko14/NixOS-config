@@ -1,11 +1,28 @@
 { osConfig, ... }:
 let
   flake = if osConfig.my.configPath != null then osConfig.my.configPath else ".";
+
+  # Powerline 胶囊字符用 JSON 转义，避免在 Nix 源文件里直接嵌 PUA 字符。
+  # U+E0B6 左圆角 / U+E0B0 分隔箭头 / U+E0B4 右圆角
+  plCapL = builtins.fromJSON ''"\ue0b6"'';
+  plArrow = builtins.fromJSON ''"\ue0b0"'';
+  plCapR = builtins.fromJSON ''"\ue0b4"'';
+  # 单色 NixOS 图标（nf-linux-nixos），替代预设默认的彩色 emoji ❄️
+  nixosIcon = builtins.fromJSON ''"\uf313"'';
 in
 {
   programs.starship = {
     enable = true;
     presets = [ "catppuccin-powerline" ];
+    # 在预设之上覆盖几个影响观感的默认值。
+    settings = {
+      os.symbols.NixOS = nixosIcon;
+
+      # conda 并入 time 的 lavender 段：conda 为空时不会留下青绿色碎片。
+      conda.style = "bg:lavender fg:crust";
+
+      format = "[${plCapL}](red)$os$username[${plArrow}](bg:peach fg:red)$directory[${plArrow}](bg:yellow fg:peach)$git_branch$git_status[${plArrow}](fg:yellow bg:green)$c$rust$golang$nodejs$bun$php$java$kotlin$haskell$python[${plArrow}](fg:green bg:lavender)$conda$time[${plCapR} ](fg:lavender)$cmd_duration$line_break$character";
+    };
   };
 
   programs.zsh = {

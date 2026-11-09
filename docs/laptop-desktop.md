@@ -10,7 +10,7 @@
 | 锁屏与空闲 | DMS 自带锁屏与 IdleService | `modules/home/desktop/niri/dms/binds.kdl`，空闲策略在 DMS 设置界面 |
 | 顶部栏 | Noctalia Shell（仅 `ryoko`，`my.desktop.noctalia.enable`） | `modules/home/desktop/niri/noctalia.nix` |
 
-Noctalia 只负责顶部栏，配色跟随 `~/.background/wallpaper.jpg`。通知、锁屏、剪贴板、Spotlight 与 xhup / vocotype 插件仍由 DMS 提供：`noctalia.nix` 关闭了 Noctalia 的通知守护进程、锁屏和剪贴板，`dms/default.nix` 的初始化脚本则确保 DMS 自带 bar 始终关闭，避免两套 bar 同时出现。壁纸仍由 DMS 的 Wallpaper Engine 插件绘制，Noctalia 的 `[wallpaper].enabled` 保持 `false`，只借用壁纸路径生成调色板。
+Noctalia 负责顶部栏与壁纸（`[wallpaper].enabled = true`，包含自动轮换），配色跟随当前壁纸。通知、锁屏、剪贴板、Spotlight 与 xhup / vocotype 插件仍由 DMS 提供：`noctalia.nix` 关闭了 Noctalia 的通知守护进程、锁屏和剪贴板，`dms/default.nix` 的初始化脚本则确保 DMS 自带 bar 始终关闭，避免两套 bar 同时出现。Noctalia 每次换壁纸时，`wallpaper_changed` 钩子会把新路径同步到 DMS 的 `lockScreenWallpaperPath`，因此 DMS 锁屏背景会跟随桌面壁纸。
 
 `i915` 放在 initrd 中，Plymouth 一开始就画在最终的显卡设备上。否则它会先画在固件帧缓冲（simpledrm）上，第二阶段 i915 接管时会短暂露出厂商 logo。固件自己显示的厂商 logo（Plymouth 启动前约 2 秒）不受系统控制。
 
@@ -79,6 +79,7 @@ reboot
 
 - 手动锁屏：**Super+L**（HHKB 的 ◇ 键），对应 `dms ipc call lock lock`。没有用 Ctrl+Alt+L，因为它会抢走 JetBrains 的 Reformat Code。
 - 锁屏使用 `dankshell` PAM 会话验证密码。系统指纹服务已随驱动关闭，DMS 的 `enableFprint` 开关即使仍开启，也无法使用指纹解锁。
+- 锁屏背景跟随 Noctalia 当前壁纸：Noctalia 的 `wallpaper_changed` 钩子把新路径写入 DMS 的 `lockScreenWallpaperPath`（见 `noctalia.nix`）。DMS 会对壁纸做内置的模糊与压暗，这是它固定的锁屏样式，没有对应设置项。
 - 系统中没有启动 swayidle/swaylock，锁屏与空闲只由 DMS 管理。
 
 ### 空闲策略（在 DMS 设置界面中手动设置）
