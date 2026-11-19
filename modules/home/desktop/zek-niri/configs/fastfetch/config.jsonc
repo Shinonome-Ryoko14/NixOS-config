@@ -1,16 +1,20 @@
 {
     "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
-     "logo": {
-        "source": "nixos",
-        "color": {
-            "1": "blue",
-            "2":"cyan"
-       }
+    "logo": {
+        "type": "kitty",
+        "source": "~/.config/fastfetch/logo.png",
+        "width": 20,
+        "padding": {
+            "left": 1,
+            "right": 4
+        }
     },
     "display": {
         "separator": " -> ",
         "color": {
-            "separator": "red"
+            "keys": "#b4befe",
+            "title": "#89dceb",
+            "separator": "#b4befe"
         }
     },
     "modules": [
@@ -20,62 +24,74 @@
         {
             "type": "kernel",
             "key": "NixOS       ",
-            "keyColor": "magenta"
+            "keyColor": "#89dceb"
         },
         {
             "key": "Host        ",
-            "type": "host"
+            "type": "host",
+            "keyColor": "#89d3ee"
         },
         {
             "key": "Shell       ",
-            "type": "shell"
+            "type": "shell",
+            "keyColor": "#89caf2"
         },
         {
             "key": "Terminal    ",
-            "type": "terminal"
+            "type": "terminal",
+            "keyColor": "#89c2f5"
         },
         {
             "type": "terminalfont",
             "key": "Font        ",
-         },
+            "keyColor": "#89b9f8"
+        },
         {
             "key": "Display     ",
-            "type": "display"
+            "type": "display",
+            "keyColor": "#8db5fa"
         },
         {
             "type": "cpu",
             "key": "CPU         ",
+            "keyColor": "#97b7fb"
         },
         {
             "type": "gpu",
             "key": "GPU         ",
+            "keyColor": "#a0b9fc"
         },
         {
             "type": "memory",
             "key": "RAM         ",
+            "keyColor": "#aabcfd"
         },
         {
             "type": "disk",
             "key": "Disk        ",
+            "keyColor": "#b3befe"
         },
         {
             "key": "Backlight   ",
-            "type": "brightness"
+            "type": "brightness",
+            "keyColor": "#b9b8fc"
         },
         {
             "type": "WM",
             "key": "desktop     ",
+            "keyColor": "#bfb2fb"
         },
         {
             "key": "Peripherals ",
             "type": "mouse",
-            "timeout": 500
+            "timeout": 500,
+            "keyColor": "#c5acf9"
         },
         {
             "type": "media",
             "key": "NOW PLAYING ",
             "format": "{?artist}{artist} - {?}{title}",
-            "keyColor": "cyan"
+            "keyColor": "#cba6f7"
         },
          "break",
         {
