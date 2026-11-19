@@ -18,6 +18,7 @@ in
     text = ''
       CompileFlags:
         Compiler: g++
+        Add: [-std=c++23]
     '';
   };
   programs.neovim = {
