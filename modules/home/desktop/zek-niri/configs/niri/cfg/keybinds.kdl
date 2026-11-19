@@ -64,6 +64,9 @@ binds {
     Mod+CTRL+Down                       { move-window-down; }
     Mod+CTRL+J                          { move-window-down; }
 
+    Mod+Shift+H                         { swap-window-left; }
+    Mod+Shift+L                         { swap-window-right; }
+
     Mod+Home                            { focus-column-first; }
     Mod+End                             { focus-column-last; }
     Mod+CTRL+Home                       { move-column-to-first; }
