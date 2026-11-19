@@ -23,6 +23,8 @@
     };
     programs.appimage.enable = true;
     programs.steam.enable = true;
+    # Distributed-Seckill 本地依赖 MySQL/Redis
+    virtualisation.docker.enable = true;
     desktop.wallpaperEngine.enable = false;
     desktop.noctalia.enable = true;
     desktop.zekNiri.enable = true;
