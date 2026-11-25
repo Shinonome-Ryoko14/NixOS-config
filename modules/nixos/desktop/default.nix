@@ -1,34 +1,14 @@
-{ config, pkgs, lib, inputs, ... }:
+{ config, pkgs, lib, ... }:
 let
   cfg = config.my.desktop;
-  desktopPackages = inputs.nur-desktop.packages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   imports = [
-    inputs.nur-desktop.nixosModules.computer-use
-    ./graphical-boot.nix
     ./fonts.nix
-    ./phone.nix
-    ./screen-cast.nix
   ];
 
   config = lib.mkIf cfg.enable {
-    programs.niri = {
-      enable = true;
-      # The imported module otherwise rebuilds niri with the host's pkgs.
-      # Keep its feature flags while selecting the exact CI-cached package set.
-      package = lib.mkIf (config.programs.codexComputerUse.enable && config.programs.codexComputerUse.patchNiri)
-        (lib.mkForce (desktopPackages.niri-patched.override {
-          agentInput = config.programs.codexComputerUse.agentInput;
-        }));
-    };
-
-    # Share the desktop and native niri backend across hosts.
-    programs.codexComputerUse = {
-      enable = cfg.codexComputerUse.enable;
-      users = [ config.my.user.name ];
-      package = desktopPackages.codex-desktop;
-    };
+    programs.niri.enable = true;
 
     # Dank Greeter on greetd. Switching display managers stops the running
     # session: apply with `nixos-rebuild boot` and reboot.
@@ -58,7 +38,7 @@ in
                   natural-scroll
               }
           }
-        '' + cfg.outputsConfig + cfg.greeter.extraConfig;
+        '' + cfg.outputsConfig;
       };
       # Copies the DMS theme and wallpaper into the greeter before each start.
       configHome = config.my.user.home;

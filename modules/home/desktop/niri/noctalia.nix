@@ -10,7 +10,7 @@ in
 
   # Noctalia provides the panels and visual shell. DMS keeps the services the
   # rest of the desktop depends on: notifications, lock screen, spotlight and
-  # the xhup / vocotype plugins. Clipboard moves to Noctalia because Waybar's
+  # the xhup plugin. Clipboard moves to Noctalia because Waybar's
   # ZEK modules call `noctalia msg panel-toggle clipboard`; DMS clipboard is
   # disabled by the zek-niri activation.
   config = lib.mkIf cfg.enable {

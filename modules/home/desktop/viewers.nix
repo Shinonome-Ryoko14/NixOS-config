@@ -17,5 +17,9 @@ lib.mkIf osConfig.my.desktop.enable {
     "image/bmp" = [ "org.gnome.Loupe.desktop" ];
     "image/tiff" = [ "org.gnome.Loupe.desktop" ];
     "image/svg+xml" = [ "org.gnome.Loupe.desktop" ];
+  }
+  # Only claim Markdown when the editor is actually installed on this host.
+  // lib.optionalAttrs osConfig.my.apps.vscode.enable {
+    "text/markdown" = [ "code.desktop" ];
   };
 }

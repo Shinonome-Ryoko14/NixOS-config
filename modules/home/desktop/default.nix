@@ -9,7 +9,6 @@
     ./file-manager.nix
     ./viewers.nix
     ./utilities.nix
-    ./easyeffects.nix
     ./mpv.nix
   ];
 }

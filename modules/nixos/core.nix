@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, pkgs, ... }:
 let
   user = config.my.user;
 in
@@ -15,9 +15,7 @@ in
       efiSysMountPoint = "/boot";
     };
   };
-  networking = {
-    networkmanager.enable = true;
-  };
+  networking.networkmanager.enable = true;
   time.timeZone = "Asia/Shanghai";
   i18n.defaultLocale = "zh_CN.UTF-8";
 
@@ -35,20 +33,7 @@ in
     extraGroups = [ "networkmanager" "wheel" ];
   };
 
-  # ragenix 用这把私钥解密 secrets/*.age;与 secrets/keys.nix 中的公钥配对。
-  age.identityPaths = lib.mkDefault [ "${user.home}/.ssh/id_ed25519" ];
-
-  services.openssh.enable = true;
-  programs.mosh.enable = true;
-  networking.firewall.allowedUDPPortRanges = [
-    { from = 60000; to = 65535; }
-  ];
-
-  networking.nftables.enable = true;
-  networking.firewall = {
-    enable = true;
-    trustedInterfaces = [ "wg0" ];
-  };
+  networking.firewall.enable = true;
 
   programs.direnv = {
     enable = true;
@@ -59,7 +44,6 @@ in
   };
 
   nixpkgs.config.allowUnfree = true;
-  nix.settings.substituters = [ "https://mirrors.cernet.edu.cn/nix-channels/store" ];
 
   system.stateVersion = "25.05";
 }

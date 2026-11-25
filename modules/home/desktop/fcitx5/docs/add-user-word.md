@@ -4,11 +4,11 @@
 
 ## 首次安装
 
-从仓库根目录执行，其他机器替换主机名：
+从仓库根目录执行：
 
 ```bash
-nixos-rebuild build --flake path:.#laptop
-sudo nixos-rebuild switch --flake path:.#laptop
+nixos-rebuild build --flake .#ryoko
+sudo nixos-rebuild switch --flake .#ryoko
 systemctl --user restart fcitx5-daemon.service
 ```
 
@@ -95,7 +95,7 @@ xhup-add-word add '我的项目' --code wdxm --category work --yes --save-only
 
 ```bash
 nix shell --impure --expr '
-  let p = (builtins.getFlake (toString ./.)).nixosConfigurations.laptop.pkgs;
+  let p = (builtins.getFlake (toString ./.)).nixosConfigurations.ryoko.pkgs;
   in p.python3.withPackages (ps: [ ps.pyyaml ps.pypinyin ])
 ' -c python3 modules/home/desktop/fcitx5/tests/test-xhup-add-word.py
 ```

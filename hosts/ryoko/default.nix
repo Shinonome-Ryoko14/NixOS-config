@@ -1,18 +1,11 @@
 { lib, pkgs, ... }:
 {
-  imports = [
-    ../../profiles/workstation.nix
-  ];
-
   my = {
     user.name = "ryoko";
     configPath = "/home/ryoko/nixos-config";
     home.imports = [ ./home.nix ];
-    shell.type = "zsh";
-    nix.cacheProfile = "public";
 
-    ai.enable = lib.mkForce false;
-    network.edunet.enable = lib.mkForce false;
+    cli.extra.enable = true;
 
     apps = {
       edge.enable = true;
@@ -20,20 +13,34 @@
       wechat.enable = true;
       qq.enable = true;
       neteaseMusic.enable = true;
+      mpv.enable = true;
+      vscode.enable = true;
     };
-    programs.appimage.enable = true;
-    programs.steam.enable = true;
+
+    desktop = {
+      enable = true;
+      utilities.enable = true;
+      noctalia.enable = true;
+      zekNiri.enable = true;
+      # 本机沿用带中文目录名的壁纸目录。
+      wallpaperDir = "/home/ryoko/图片/wallpaper";
+      outputs."eDP-1" = {
+        mode = "1920x1080@60.000";
+        scale = 1;
+      };
+    };
+
+    fonts.extra.enable = true;
+    hardware.bluetooth.enable = true;
+
+    programs = {
+      appimage.enable = true;
+      nixLd.enable = true;
+      steam.enable = true;
+    };
+
     # Distributed-Seckill 本地依赖 MySQL/Redis
     virtualisation.docker.enable = true;
-    desktop.wallpaperEngine.enable = false;
-    desktop.noctalia.enable = true;
-    desktop.zekNiri.enable = true;
-    # 本机沿用带中文目录名的壁纸目录;其他主机默认 ~/Pictures/wallpaper。
-    desktop.wallpaperDir = "/home/ryoko/图片/wallpaper";
-    desktop.outputs."eDP-1" = {
-      mode = "1920x1080@60.000";
-      scale = 1;
-    };
   };
 
   boot.loader = {
@@ -60,10 +67,6 @@
   programs.appimage.package = lib.mkForce (pkgs.appimage-run.override {
     extraPkgs = pkgs: [ pkgs.libepoxy pkgs.libffi_3_3 ];
   });
-
-  services.openssh.enable = lib.mkForce false;
-  programs.mosh.enable = lib.mkForce false;
-  networking.firewall.allowedUDPPortRanges = lib.mkForce [ ];
 
   system.stateVersion = lib.mkForce "26.05";
 }

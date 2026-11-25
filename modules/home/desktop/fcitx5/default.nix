@@ -11,15 +11,10 @@ let
     [ "graphite" "sakura" "vermilion" "wechat" "youlan" ];
 in
 {
-  # Fcitx5 itself; engines and tools live in the imported modules.
+  # Fcitx5 itself; Rime and the Xiaohe/xhup helpers live in the imported modules.
   imports = [
     ./rime.nix
     ./xhup.nix
-    ./vocotype.nix
-    ./vinput.nix
-    ./doubao.nix
-    ./hotwords.nix
-    ./vtype.nix
   ];
 
   config = lib.mkIf osConfig.my.desktop.enable {

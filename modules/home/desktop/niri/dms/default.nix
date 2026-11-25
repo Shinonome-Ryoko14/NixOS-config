@@ -1,14 +1,6 @@
 { config, lib, pkgs, inputs, osConfig, ... }:
 let
   cfg = config.programs.dank-material-shell;
-  # Qt Quick normally exposes only the current paragraph to the input method,
-  # even when the user selects several paragraphs. Keep DMS voice-edit input
-  # and replacement ranges in the same document-wide coordinate space.
-  voiceEditQt = pkgs.qt6.overrideScope (final: prev: {
-    qtdeclarative = prev.qtdeclarative.overrideAttrs (old: {
-      patches = (old.patches or [ ]) ++ [ ./patches/qtquick-full-surrounding-text.patch ];
-    });
-  });
   jsonFormat = pkgs.formats.json { };
   initialSettings = jsonFormat.generate "dms-settings.json" {
     configVersion = 18;
@@ -121,11 +113,7 @@ in
     programs.dank-material-shell = {
       # Use nixpkgs for the runtime and the upstream flake for its module.
       package = pkgs.dms-shell;
-      quickshell.package =
-        if osConfig.my.input.speech.enable then
-          pkgs.quickshell.override { qt6 = voiceEditQt; }
-        else
-          pkgs.quickshell;
+      quickshell.package = pkgs.quickshell;
       systemd.enable = true;
       systemd.target = "graphical-session.target";
       enableCalendarEvents = true;
@@ -139,23 +127,13 @@ in
         source = ./niri.kdl;
       };
       "niri/outputs.kdl".text = osConfig.my.desktop.outputsConfig;
-      "niri/computer-use.kdl" = lib.mkIf osConfig.my.desktop.codexComputerUse.enable {
-        source = ../computer-use.kdl;
-      };
-      "niri/wallpaper-engine.kdl" = lib.mkIf osConfig.my.desktop.wallpaperEngine.enable {
-        source = ./wallpaper-engine.kdl;
-      };
       "niri/base.kdl" = lib.mkIf (!osConfig.my.desktop.zekNiri.enable) {
         source =
           if osConfig.my.configPath != null
           then config.lib.file.mkOutOfStoreSymlink "${osConfig.my.configPath}/modules/home/desktop/niri/config.kdl"
           else ../config.kdl;
       };
-      "niri/dms-bindings.kdl".text = lib.concatStringsSep "\n" (
-        builtins.filter
-          (line: osConfig.my.input.speech.enable || !(lib.hasInfix "vocotypeHotwords" line))
-          (lib.splitString "\n" (builtins.readFile ./binds.kdl))
-      );
+      "niri/dms-bindings.kdl".text = builtins.readFile ./binds.kdl;
     };
 
     home.activation.initializeDms = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

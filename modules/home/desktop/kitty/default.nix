@@ -1,4 +1,4 @@
-{ config, lib, pkgs, osConfig, ... }:
+{ lib, osConfig, ... }:
 lib.mkIf osConfig.my.desktop.enable {
   # ZEKniri supplies ~/.config/kitty when enabled.
   xdg.configFile."kitty" = lib.mkIf (!osConfig.my.desktop.zekNiri.enable) {

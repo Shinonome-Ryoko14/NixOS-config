@@ -1,25 +1,6 @@
 # NixOS 配置仓库
 
-模块化 NixOS + Home Manager 配置，支持 laptop、home、class 桌面主机、ARM64 Oracle Cloud `vps`，以及供新机器首次安装的最小配置 `base`。桌面主机选择一个 profile（`workstation` 或 `personal`），再在自己的 `default.nix` 中覆盖 `my.*` 开关。日常应用全部声明在配置中，`nix profile` 只用于试用；编程环境由各项目自己的 devShell 管理。
-
-## 复用这个仓库前
-
-这是一份**个人配置**，不是开箱即用的发行版模板。提交历史中较早的部分来自上游配置（chumeng），本仓库在其基础上维护。仓库只有一个 `main` 分支，clone 得到的就是当前正在运行的配置；唯一与具体机器绑定、必须重新生成的是硬件配置。构建前至少需要：
-
-1. **准备主机**：复制 `hosts/base/` 作为起点，并设置 `my.user.name`（没有默认值，必须显式声明）。
-2. **生成硬件配置**（不入库）：
-   ```bash
-   sudo nixos-generate-config --root / --show-hardware-config \
-     > hosts/<主机>/hardware-configuration.nix
-   git add -N -f hosts/<主机>/hardware-configuration.nix
-   ```
-   `git add -N -f` 不能省略，否则 flake 看不到该文件。详见 [hosts/README.md](hosts/README.md)。
-3. **在 `flake.nix` 注册**：`nixosConfigurations.<主机> = mkHost "<主机>";`
-4. **可选 secrets**：仓库不含任何 `.age` 文件。需要 AI、代理、云服务时，先把自己的公钥写入 `secrets/keys.nix`，再用 `ragenix -e secrets/<名字>.age` 创建。
-5. **可选域名**：VPS 配置以 `example.com` 占位，部署前替换。
-6. **AI CLI**：`opencode`、`claude-code`、`codex` 的二进制由配置安装；OpenCode 的主题与基础配置已托管进 Home Manager，`service.json`（含本地服务密码，不入库）由 OpenCode 首次运行时生成。
-
-`hosts/class`、`hosts/home`、`hosts/laptop`、`hosts/vps` 是原作者机器的配置，不需要时可直接删除。
+`ryoko` 单机的 NixOS + Home Manager 配置：Niri + DankMaterialShell，登录界面为 Dank Greeter；日常应用全部声明在配置中，`nix profile` 只用于试用。
 
 ## 换电脑 / 重装
 
@@ -33,74 +14,53 @@ git add -N -f hosts/ryoko/hardware-configuration.nix
 sudo nixos-rebuild switch --flake .#ryoko
 ```
 
-前提：新机器的用户名与主机名都是 `ryoko`，且仓库位于 `~/nixos-config`。
-不同的话修改 `hosts/ryoko/default.nix` 里的 `my.user.name` 和 `configPath`，
-必要时把目录重命名为新主机名并在 `flake.nix` 注册。
+前提：新机器的用户名与主机名都是 `ryoko`，且仓库位于 `~/nixos-config`。不同的话修改
+`hosts/ryoko/default.nix` 里的 `my.user.name` 和 `my.configPath`。`.#nixos` 是
+`.#ryoko` 的别名。
 
-注意：`hardware-configuration.nix` 含有本机磁盘 UUID，不能复用其他机器的文件；
-上面的 `nixos-generate-config` 必须在目标机器上执行。
+`hardware-configuration.nix` 含有本机磁盘 UUID，不能复用其他机器的文件；上面的
+`nixos-generate-config` 必须在目标机器上执行，详见 [hosts/README.md](hosts/README.md)。
 
-## 安装与构建
+## 构建
 
 ```bash
-# 各主机的日常配置
-nixos-rebuild build --flake .#laptop   # 别名 .#nixos
-nixos-rebuild build --flake .#home
-nixos-rebuild build --flake .#class
-
-# 最小系统：先用目标机器生成 hosts/base/hardware-configuration.nix（不入库，见 hosts/README.md）
-nixos-rebuild build --flake .#base
+nixos-rebuild build --flake .#ryoko
+sudo nixos-rebuild switch --flake .#ryoko
 ```
 
-改变图形登录配置时，构建通过后使用 `sudo nixos-rebuild boot --flake .#<主机>` 并重启。
+改变图形登录配置时，构建通过后使用 `sudo nixos-rebuild boot --flake .#ryoko` 并重启。
+配置结构、功能开关与常用操作见 [配置说明](docs/configuration.md)；登录、桌面与锁屏细节见
+[桌面说明](docs/desktop.md)。
 
-功能开关、应用安装、项目环境及迁移注意事项见 [分阶段安装指南](docs/installation-profiles.md)。
-class 的分区、首次安装和登录命令见 [class 双系统安装指南](docs/class-installation.md)。
-VPS 的整盘 ext4 布局、精简软件与 nixos-anywhere 安装命令见 [Oracle Cloud VPS 安装指南](docs/vps-installation.md)；自动追番与媒体库见 [AutoBangumi + Emby 使用说明](docs/vps-media.md)；私有代码托管见 [Forgejo 使用说明](docs/vps-forgejo.md)；笔记服务见 [Memos 使用说明](docs/vps-memos.md)；收藏与稍后阅读见 [Karakeep 使用说明](docs/vps-karakeep.md)；服务监控见 [Uptime Kuma 使用说明](docs/vps-uptime-kuma.md)。
-
-### 自定义安装镜像
+## 自定义安装镜像
 
 `installer` 是独立的 x86_64 Linux 安装环境，使用 NixOS minimal ISO，开机启用 SSH，
-并允许 `secrets/keys.nix` 中的 `laptop` 公钥登录 root。镜像包含 Git、Jujutsu（`jj`）、Vim、NetworkManager
-和 Nix flakes 支持，配置了 CERNET Nix 缓存；不导入日常主机的共享配置和功能模块。
-
-在仓库根目录构建镜像，使用独立的输出链接保留日常系统构建的 `result`：
+并允许 `secrets/keys.nix` 中的维护者公钥登录 root。镜像包含 Git、Jujutsu（`jj`）、
+Vim、NetworkManager 和 Nix flakes 支持，不导入日常主机的共享配置和功能模块。
 
 ```bash
 nix build .#installer-iso --out-link result-installer
 ls -lh result-installer/iso/*.iso
-
-# 等价的 host 构建入口
-nix build .#nixosConfigurations.installer.config.system.build.isoImage --out-link result-installer
 ```
 
-可以将 `result-installer/iso/` 下的 ISO 复制到 Ventoy，也可以直接写入 U 盘。
-下面的 `dd` 会覆盖整个目标设备，先用 `lsblk` 确认 U 盘，并将 `/dev/sdX` 替换为实际设备（不是分区）：
+可以把 ISO 复制到 Ventoy，或写入 U 盘。下面的 `dd` 会覆盖整个目标设备，先用
+`lsblk` 确认 U 盘，并将 `/dev/sdX` 替换为实际设备（不是分区）：
 
 ```bash
 lsblk
 sudo dd if=result-installer/iso/*.iso of=/dev/sdX bs=4M status=progress oflag=sync
 ```
 
-目标机从镜像启动后，有线网络通常自动连接；Wi-Fi 可用 `nmtui` 配置。
-通过 `ip a` 查看目标机 IP，再从持有 laptop 对应 SSH 私钥的机器连接：
-
-```bash
-ssh root@<IP>
-```
-
 ## 配置结构
 
 - `flake.nix` / `flake.lock`：锁定输入、主机入口、安装镜像和项目模板。
-- `lib/default.nix`：`mkHost`，为每台主机接入 `modules/nixos`、Home Manager 和 `hosts/<主机>`，并设置主机名。
+- `lib/default.nix`：`mkHost`，接入共享模块、Home Manager 和 `hosts/ryoko`，并设置主机名。
 - `modules/options.nix`：全部 `my.*` 开关的集中声明与依赖断言。
-- `modules/nixos/`：系统层。`core.nix`（启动、网络、用户、SSH、防火墙、Nix、direnv）、`nix-cache.nix`、`overlays.nix`，以及 `desktop/`、`hardware/`、`network/`、`services/`、`virtualisation.nix`、`programs.nix`。
-- `modules/home/`：Home Manager 层。`shell/`、`desktop/`（Niri、DMS、输入法、文件管理等）、`ai/` 与 `apps.nix`。
-- `profiles/`：`workstation.nix`（所有桌面主机共用）与 `personal.nix`（laptop、home 的个人功能），均以 `mkDefault` 设置，主机可直接覆盖。
-- `hosts/<主机>/`：选择 profile、覆盖开关，并放置硬件与单主机配置；`home.nix` 为该主机的 Home Manager 覆盖。`hosts/base/` 是功能全关的最小配置，`hosts/installer/` 为独立安装镜像。
-- 自定义软件包在独立 [nur-packages](https://github.com/lihaoze123/nur-packages) 仓库维护。普通包通过官方 [NUR](https://github.com/nix-community/NUR) 输入与 `pkgs.nur.repos.lihaoze123` 引用，更新索引运行 `nix flake update nur`；Niri、Codex Desktop 及 Computer Use 模块使用单独固定的 `nur-desktop`，保留与缓存 CI 相同的包集，更新流程见[缓存说明](docs/nix-cache.md)。
+- `modules/nixos/`：系统层。`core.nix`（启动、网络、用户、防火墙、Nix、direnv）、`nix-cache.nix`、`overlays.nix`，以及 `desktop/`、`hardware/`、`virtualisation.nix`、`programs.nix`。
+- `modules/home/`：Home Manager 层。`shell/`（Zsh、Neovim、CLI）、`desktop/`（Niri、DMS/Noctalia、输入法、文件管理等）与 `apps.nix`。
+- `hosts/ryoko/`：本机开关覆盖、硬件配置和 Home Manager 覆盖。
 - `templates/project/`：通用 devShell 模板（`#project`）和 Java 8 Servlet/JSP 可执行 JAR 模板（`#java-webapp`）。
-- `secrets/`：凭据统一由 ragenix 管理，收件人见 `secrets/secrets.nix`。
+- `secrets/keys.nix`：安装镜像使用的 SSH 公钥；日常主机不再引用加密凭据。
 
 ## 常用操作
 
@@ -111,9 +71,9 @@ nix profile install nixpkgs#obsidian
 # 决定长期使用后，写入 modules/home/apps.nix 并从 profile 移除
 nix profile remove obsidian
 
-# 版本管理使用 Jujutsu
-jj status
-jj diff
+# 版本管理
+git status
+git diff
 
 # 更新输入、检查与格式化
 nix flake update
@@ -121,6 +81,5 @@ nix flake check
 nix fmt
 ```
 
-不编辑自动生成的 `hardware-configuration.nix`。新增脚本使用 `/usr/bin/env` shebang。先 build 再激活，不自动清理旧系统代际。
-
-笔记本登录、启动画面与锁屏细节见 [Laptop 桌面说明](docs/laptop-desktop.md)。
+不编辑自动生成的 `hardware-configuration.nix`。新增脚本使用 `/usr/bin/env` shebang。
+先 build 再激活，不自动清理旧系统代际。

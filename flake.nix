@@ -1,33 +1,14 @@
 {
-  description = "A simple NixOS flake";
+  description = "ryoko's NixOS, Home Manager and Niri desktop configuration";
 
   inputs = {
     nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
-    # Keep upstream's nixpkgs pin for CachyOS patch compatibility and our Attic cache.
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    deploy-rs = {
-      url = "github:serokell/deploy-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Desktop binaries must use the same package set as their cache CI.
-    # Keep this input's own nixpkgs lock; following the host changes store paths.
-    nur-desktop.url = "github:lihaoze123/nur-packages/c664cfd146474fc46c088f79e95f0ff27ab905e6";
-    nix-index-database = {
-      url = "github:nix-community/nix-index-database";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # Keep VoCoType's validated ONNX Runtime / FunASR dependency versions.
-    vocotype.url = "github:LeonardNJU/VocoType-linux/v5.0.1";
     dms = {
       url = "github:AvengeMedia/DankMaterialShell/v1.6.2";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,17 +23,6 @@
       flake = false;
     };
     mark-shot.url = "github:jswysnemc/mark-shot";
-    daeuniverse.url = "github:daeuniverse/flake.nix";
-    geodb = {
-      url = "github:Loyalsoldier/v2ray-rules-dat/release";
-      flake = false;
-    };
-    ragenix.url = "github:yaxitech/ragenix";
-    chinese-fonts-overlay.url = "github:brsvh/chinese-fonts-overlay/main";
-    browser-previews = {
-      url = "github:nix-community/browser-previews";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -62,8 +32,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.rust-overlay.follows = "rust-overlay";
     };
-    claude-code.url = "github:sadjow/claude-code-nix";
-    codex-code.url = "github:sadjow/codex-cli-nix";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -71,39 +39,17 @@
       inherit (import ./lib { inherit inputs; }) system mkHost;
     in
     {
-      nixosConfigurations.laptop = mkHost "laptop";
-      nixosConfigurations.class = mkHost "class";
-      nixosConfigurations.home = mkHost "home";
       nixosConfigurations.ryoko = mkHost "ryoko";
       nixosConfigurations.nixos = self.nixosConfigurations.ryoko;
-      # Minimal system for new machines; optional features stay off.
-      nixosConfigurations.base = mkHost "base";
-      nixosConfigurations.vps = mkHost {
-        name = "vps";
-        system = "aarch64-linux";
-      };
-      # Live installer stays independent of the installed hosts' shared modules.
+
+      # Live installer stays independent of the installed host's shared modules.
       nixosConfigurations.installer = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [ ./hosts/installer ];
       };
 
       packages.${system}.installer-iso = self.nixosConfigurations.installer.config.system.build.isoImage;
-      apps.${system} = {
-        deploy = inputs.deploy-rs.apps.${system}.default;
-      };
-      deploy.nodes.vps = {
-        # Logical node name; pass the actual address with --hostname when deploying.
-        hostname = "vps";
-        sshUser = "ryoko";
-        remoteBuild = true;
-        autoRollback = true;
-        magicRollback = true;
-        profiles.system = {
-          user = "root";
-          path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.vps;
-        };
-      };
+
       templates.project = {
         path = ./templates/project/devshell;
         description = "Independent project devShells for Rust, C++, Node.js, Python and Java";

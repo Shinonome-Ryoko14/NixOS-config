@@ -1,4 +1,4 @@
-{ config, lib, pkgs, osConfig, ... }:
+{ config, lib, pkgs, ... }:
 let
   fetchPlugin = owner: repo: rev: hash: pkgs.fetchFromGitHub {
     inherit owner repo rev hash;
@@ -18,33 +18,9 @@ let
       --replace-fail 'command -v trans' 'test -x ${pkgs.translate-shell}/bin/trans' \
       --replace-fail 'exec trans ' 'exec ${pkgs.translate-shell}/bin/trans '
   '';
-  dankscale = fetchPlugin "dwright134" "dms-dankscale"
-    "bddebf0e2935ba23b0614ff9af5bf8f4ed6d3d9f"
-    "sha256-o5kcFV7VAmHJqsKgnjDuuryubnuI9U+GQIPOlENZ5ao=";
   officialPlugins = fetchPlugin "AvengeMedia" "dms-plugins"
     "a8a508bc371e7c3f2c7862d8840b88cf5c63978f"
     "sha256-3nHfkGzmmq8JpN7bmO8Z5zIumvx8dzwS1GtQ6V0XgMg=";
-  wallpaperEngineSrc = fetchPlugin "sgtaziz" "dms-wallpaperengine"
-    "e96718f5038f54546311a239ef0f6622f15c515a"
-    "sha256-SSNXZl7DFA7cKaSt4FaXcQ58IjcHxvyi/zVKMwvHXdQ=";
-  wallpaperEngine = pkgs.runCommand "dms-wallpaperengine" { } ''
-    cp -r ${wallpaperEngineSrc} $out
-    chmod -R u+w $out
-    # Use store paths even when DMS still has the previous session's PATH.
-    substituteInPlace $out/js/CommandBuilder.js $out/ui/ScenePropertiesModal.qml \
-      --replace-fail '["linux-wallpaperengine"' '["${pkgs.linux-wallpaperengine}/bin/linux-wallpaperengine"'
-    substituteInPlace $out/LinuxWallpaperEnginePlugin.qml \
-      --replace-fail '["magick",' '["${pkgs.imagemagick}/bin/magick",' \
-      --replace-fail 'command -v magick' 'test -x ${pkgs.imagemagick}/bin/magick'
-  '';
-  valent = pkgs.valent.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [ ./valent-wl-clipboard.patch ];
-    postPatch = (old.postPatch or "") + ''
-      substituteInPlace src/plugins/gtk/valent-gdk-clipboard.c \
-        --replace-fail '@wlPaste@' '${pkgs.wl-clipboard}/bin/wl-paste' \
-        --replace-fail '@wlCopy@' '${pkgs.wl-clipboard}/bin/wl-copy'
-    '';
-  });
   initialize = pkgs.writeShellApplication {
     name = "initialize-dms-plugins";
     runtimeInputs = [ pkgs.python3 pkgs.systemd ];
@@ -55,37 +31,11 @@ let
 in
 {
   config = lib.mkIf config.programs.dank-material-shell.enable {
-    home.packages = [ pkgs.translate-shell ]
-      ++ lib.optionals osConfig.my.desktop.wallpaperEngine.enable [ pkgs.linux-wallpaperengine pkgs.imagemagick ];
-    # Mutter's adapter has higher priority, but its service is absent in Niri.
-    dconf.settings."ca/andyholmes/valent/clipboard/plugin/gnome".enabled = false;
+    home.packages = [ pkgs.translate-shell ];
     xdg.configFile = {
       "DankMaterialShell/plugins/calculator".source = calculator;
       "DankMaterialShell/plugins/dankTranslate".source = translate;
-      "DankMaterialShell/plugins/linuxWallpaperEngine" = lib.mkIf osConfig.my.desktop.wallpaperEngine.enable { source = wallpaperEngine; };
-      "DankMaterialShell/plugins/dankscale" = lib.mkIf osConfig.my.network.tailscale.enable { source = dankscale; };
       "DankMaterialShell/plugins/dankPomodoroTimer".source = "${officialPlugins}/DankPomodoroTimer";
-      "DankMaterialShell/plugins/dankKDEConnect" = lib.mkIf osConfig.my.desktop.phone.enable { source = "${officialPlugins}/DankKDEConnect"; };
-    };
-    systemd.user.services.valent = lib.mkIf osConfig.my.desktop.phone.enable {
-      Unit = {
-        Description = "Phone connectivity for DMS";
-        After = [ "graphical-session.target" "gcr-ssh-agent.socket" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${valent}/bin/valent --gapplication-service";
-        Environment = [
-          "SSH_AUTH_SOCK=%t/gcr/ssh"
-          # Valent needs the GVfs backend to mount the phone's SFTP share.
-          "GIO_EXTRA_MODULES=${pkgs.gvfs}/lib/gio/modules"
-          # Use Niri's data-control protocol for background clipboard access.
-          "VALENT_WL_CLIPBOARD=1"
-        ];
-        Restart = "on-failure";
-        RestartSec = 3;
-      };
-      Install.WantedBy = [ "graphical-session.target" ];
     };
     home.activation.initializeDmsPlugins = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
       run ${lib.getExe initialize}

@@ -1,8 +1,7 @@
-{ config, lib, pkgs, osConfig, inputs, ... }:
+{ lib, pkgs, osConfig, inputs, ... }:
 let
   cfg = osConfig.my.desktop.zekNiri;
   zek = inputs.zek-niri;
-  home = config.home.homeDirectory;
   wallpaperDir = osConfig.my.desktop.wallpaperDir;
 
   # ZEK-menu needs PyGObject plus the GTK 3 / layer-shell typelibs.

@@ -14,10 +14,9 @@ lib.mkIf config.my.desktop.enable {
       source-han-sans
       source-han-serif
       wqy_zenhei
-      foundertype-fonts
       lxgw-wenkai
       cm_unicode
-    ] ++ lib.optionals cfg.windows.enable [ windows-fonts ];
+    ];
     enableDefaultPackages = false;
     fontconfig.defaultFonts = {
       serif = [ "Noto Serif CJK SC" ];

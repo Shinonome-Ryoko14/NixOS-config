@@ -1,4 +1,4 @@
 { ... }:
 {
-  imports = [ ./bluetooth.nix ./kernel.nix ];
+  imports = [ ./bluetooth.nix ];
 }
