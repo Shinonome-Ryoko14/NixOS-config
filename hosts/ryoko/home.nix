@@ -2,8 +2,9 @@
 {
   home.stateVersion = lib.mkForce "26.05";
 
-  # Distributed-Seckill 工具链（go.mod 要求 1.25，nixpkgs 已下架 1.25）
-  home.packages = with pkgs; [ go_1_26 gnumake gcc ];
+  # 由 `ryoko add/remove` 维护的额外软件包，加上本机开发工具链。
+  home.packages = (import ./extra-packages.nix { inherit pkgs; })
+    ++ (with pkgs; [ go_1_26 gnumake gcc ]);
 
   # Use the official OpenCode binary from ~/.opencode/bin instead of the
   # nixpkgs build. The two versions share ~/.local/share/opencode, and the

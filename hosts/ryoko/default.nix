@@ -1,4 +1,8 @@
 { lib, pkgs, ... }:
+let
+  catalog = import ../../modules/app-catalog.nix;
+  enabledApps = import ./enabled-apps.nix;
+in
 {
   my = {
     user.name = "ryoko";
@@ -7,15 +11,7 @@
 
     cli.extra.enable = true;
 
-    apps = {
-      edge.enable = true;
-      chrome.enable = true;
-      wechat.enable = true;
-      qq.enable = true;
-      neteaseMusic.enable = true;
-      mpv.enable = true;
-      vscode.enable = true;
-    };
+    apps = lib.genAttrs enabledApps (_: { enable = true; });
 
     desktop = {
       enable = true;
@@ -69,4 +65,11 @@
   });
 
   system.stateVersion = lib.mkForce "26.05";
+
+  assertions = [
+    {
+      assertion = builtins.all (name: builtins.hasAttr name catalog) enabledApps;
+      message = "hosts/ryoko/enabled-apps.nix 含有未知应用；可选值: ${lib.concatStringsSep ", " (builtins.attrNames catalog)}";
+    }
+  ];
 }

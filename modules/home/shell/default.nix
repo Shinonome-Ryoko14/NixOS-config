@@ -4,5 +4,6 @@
     ./neovim
     ./cli.nix
     ./zsh.nix
+    ./ryoko
   ];
 }

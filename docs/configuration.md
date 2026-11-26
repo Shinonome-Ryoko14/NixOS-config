@@ -25,9 +25,48 @@ niri 配置链接到这里，改动无需重建即可生效。
 
 ## 新增应用或功能
 
-1. 在 `modules/options.nix` 的 `my.apps` 下声明开关，或复用已有开关。
-2. 在 `modules/home/apps.nix` 的包表中加入对应软件包。
-3. 在 `hosts/ryoko/default.nix` 中启用开关。
+日常开关交给 `ryoko`：
+
+```bash
+ryoko list              # 查看应用开关和受管软件包
+ryoko list -i           # 用 fzf 交互切换
+ryoko enable qq         # 启用应用开关
+ryoko disable qq
+ryoko add obsidian      # 加入受管软件包
+ryoko remove obsidian
+ryoko qq off            # enable/disable 的简写
+```
+
+应用名定义在 `modules/app-catalog.nix`，启用清单是
+`hosts/ryoko/enabled-apps.nix`，额外软件包是
+`hosts/ryoko/extra-packages.nix`。手工修改这两个文件同样有效；`ryoko` 只
+维护清单，不会改写其他 Nix 配置。`enable/disable/add/remove` 默认先构建，再
+询问是否切换；`--no-build` 只改文件，`--dry-run` 只显示差异。
+
+新增一个可开关的应用：
+
+1. 在 `modules/app-catalog.nix` 加名称和描述；
+2. 在 `modules/home/apps.nix` 的包表中加入对应软件包；
+3. 运行 `ryoko enable <名称>`。
+
+`ryoko` 的日常命令：
+
+| 命令 | 作用 |
+| --- | --- |
+| `ryoko apply [--build\|--boot\|--test]` | 构建，默认询问后 switch |
+| `ryoko status` | 仓库、代际、磁盘与服务状态 |
+| `ryoko update [输入]` | 更新 flake 输入并构建 |
+| `ryoko gen [编号]` / `ryoko gen rollback` | 查看或切换代际 |
+| `ryoko gc [--days N] [--yes]` | 清理旧代际，默认 dry-run |
+| `ryoko ime status\|restart\|deploy\|add\|lookup\|sync` | Fcitx5/Rime 与 xhup 词库 |
+| `ryoko wall [next\|random\|prev\|get\|list\|图片]` | 切换壁纸 |
+| `ryoko timer 25m 休息` | 计时并在结束时通知 |
+| `ryoko lock` / `suspend` / `reboot` / `shutdown` / `power` | 电源与锁屏 |
+| `ryoko git status\|save\|sync` | 查看、提交、同步配置仓库 |
+| `ryoko upload [-b 分支] [--pr]` | 新建分支、提交并推送到 GitHub |
+
+不带参数的 `ryoko` 会打开 fzf 操作面板。`ryoko git save/upload` 用文件级
+多选提交，始终排除 `hosts/*/hardware-configuration.nix`。
 
 试用软件不改配置：
 

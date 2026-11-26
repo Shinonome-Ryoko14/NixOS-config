@@ -2,6 +2,7 @@
 let
   inherit (lib) mkEnableOption mkOption types;
   cfg = config.my;
+  appCatalog = import ./app-catalog.nix;
   # Every switch defaults to off; hosts enable them.
   requires = enabled: dependency: name: dependencyName: {
     assertion = !enabled || dependency;
@@ -117,16 +118,12 @@ in
 
     virtualisation.docker.enable = mkEnableOption "rootless Docker";
 
-    # One switch per installed application.
-    apps = {
-      edge.enable = mkEnableOption "Microsoft Edge";
-      chrome.enable = mkEnableOption "Google Chrome";
-      wechat.enable = mkEnableOption "WeChat";
-      qq.enable = mkEnableOption "QQ";
-      neteaseMusic.enable = mkEnableOption "Netease Cloud Music (netease-cloud-music-gtk)";
-      mpv.enable = mkEnableOption "mpv";
-      vscode.enable = mkEnableOption "VS Code with Vim, Dracula, Tinymist, LaTeX Workshop, CodeSnap and the Chinese language pack";
-    };
+    # One switch per installed application. The catalog is shared with the
+    # ryoko CLI, so `ryoko list` can describe every switch without a second
+    # copy of the descriptions.
+    apps = lib.mapAttrs
+      (_: description: { enable = mkEnableOption description; })
+      appCatalog;
 
     programs = {
       appimage.enable = mkEnableOption "AppImage execution support";

@@ -57,7 +57,7 @@ sudo dd if=result-installer/iso/*.iso of=/dev/sdX bs=4M status=progress oflag=sy
 - `lib/default.nix`：`mkHost`，接入共享模块、Home Manager 和 `hosts/ryoko`，并设置主机名。
 - `modules/options.nix`：全部 `my.*` 开关的集中声明与依赖断言。
 - `modules/nixos/`：系统层。`core.nix`（启动、网络、用户、防火墙、Nix、direnv）、`nix-cache.nix`、`overlays.nix`，以及 `desktop/`、`hardware/`、`virtualisation.nix`、`programs.nix`。
-- `modules/home/`：Home Manager 层。`shell/`（Zsh、Neovim、CLI）、`desktop/`（Niri、DMS/Noctalia、输入法、文件管理等）与 `apps.nix`。
+- `modules/home/`：Home Manager 层。`shell/`（Zsh、Neovim、CLI、`ryoko`）、`desktop/`（Niri、DMS/Noctalia、输入法、文件管理等）与 `apps.nix`。
 - `hosts/ryoko/`：本机开关覆盖、硬件配置和 Home Manager 覆盖。
 - `templates/project/`：通用 devShell 模板（`#project`）和 Java 8 Servlet/JSP 可执行 JAR 模板（`#java-webapp`）。
 - `secrets/keys.nix`：安装镜像使用的 SSH 公钥；日常主机不再引用加密凭据。
@@ -65,10 +65,16 @@ sudo dd if=result-installer/iso/*.iso of=/dev/sdX bs=4M status=progress oflag=sy
 ## 常用操作
 
 ```bash
+# 日常开关：查看、启用/禁用应用，添加/移除受管软件包
+ryoko list
+ryoko enable qq
+ryoko add obsidian
+ryoko apply
+
 # 试用软件：nix shell 不留痕迹，nix profile 可保留一段时间
 nix shell nixpkgs#obsidian
 nix profile install nixpkgs#obsidian
-# 决定长期使用后，写入 modules/home/apps.nix 并从 profile 移除
+# 决定长期使用后，用 ryoko add 写入受管清单并从 profile 移除
 nix profile remove obsidian
 
 # 版本管理
@@ -76,7 +82,7 @@ git status
 git diff
 
 # 更新输入、检查与格式化
-nix flake update
+ryoko update
 nix flake check
 nix fmt
 ```

@@ -1,7 +1,5 @@
-{ osConfig, ... }:
+{ ... }:
 let
-  flake = if osConfig.my.configPath != null then osConfig.my.configPath else ".";
-
   # Powerline 胶囊字符用 JSON 转义，避免在 Nix 源文件里直接嵌 PUA 字符。
   # U+E0B6 左圆角 / U+E0B0 分隔箭头 / U+E0B4 右圆角
   plCapL = builtins.fromJSON ''"\ue0b6"'';
@@ -51,8 +49,8 @@ in
       ll = "ls -lah";
       la = "ls -A";
       grep = "rg";
-      rebuild = "sudo nixos-rebuild switch --flake ${flake}#${osConfig.networking.hostName}";
-      update = "sudo nixos-rebuild switch --upgrade --flake ${flake}#${osConfig.networking.hostName}";
+      rebuild = "ryoko apply";
+      update = "ryoko update";
     };
 
     initContent = ''
@@ -60,6 +58,30 @@ in
       SAVEHIST=10000
       HISTFILE="$HOME/.zsh_history"
       setopt HIST_IGNORE_ALL_DUPS SHARE_HISTORY AUTO_CD
+
+      _ryoko() {
+        local -a cmds
+        if (( CURRENT == 2 )); then
+          cmds=(''${(f)"$(ryoko completions commands 2>/dev/null)"})
+          _describe 'command' cmds
+          return
+        fi
+        case $words[2] in
+          enable|disable)
+            local -a apps
+            apps=(''${(f)"$(ryoko completions apps 2>/dev/null)"})
+            _describe 'app' apps
+            ;;
+          add|remove)
+            local -a packages
+            packages=(''${(f)"$(ryoko completions packages 2>/dev/null)"})
+            _describe 'package' packages
+            ;;
+        esac
+      }
+      if (( $+functions[compdef] )); then
+        compdef _ryoko ryoko
+      fi
     '';
   };
 }
